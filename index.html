@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Partition Urbaine — Cartographie Sonore</title>
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Tailwind via CDN pour prototype rapide -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+  :root {
+    --rf-red: #762B84;
+    --rf-dark: #0e0f11;
+    --rf-gray: #1b1c1f;
+    --rf-contrast: #ffffff;
+    --accent: #2196f3;
+    --max-width: 1200px;
+    --map-height-desktop: 78vh;
+    --map-height-mobile: 55vh;
+    --font-regular: 'Outfit', sans-serif;
+    --font-semibold: 'Outfit', sans-serif;
+  }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: var(--font-regular);
+    background: var(--rf-dark);
+    color: var(--rf-contrast);
+  }
+
+
+
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .brand-mark {
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    background: var(--rf-red);
+    display: grid;
+    place-items: center;
+    color: var(--rf-contrast);
+    font-weight: 700;
+  }
+
+  h1 {
+    font-size: 1.25rem;
+    margin: 0;
+    color: var(--rf-contrast);
+  }
+
+  p.lead {
+    margin: 6px 0 18px;
+    color: #ccc;
+  }
+      p {
+      padding-top: 0.5em;
+      padding-bottom: 0.5em;
+      color: #C2BCD7;
+    }
+    .subtitle {
+      color: white;
+    }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 18px;
+  }
+
+  #map {
+    width: 100%;
+    height: var(--map-height-desktop);
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+    overflow: hidden;
+  }
+
+  aside {
+    background: rgba(30, 31, 35, 0.9);
+    padding: 14px;
+    border-radius: 12px;
+    height: var(--map-height-desktop);
+    overflow: auto;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+  }
+
+  .search {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .search input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background: #1e1f23;
+    color: var(--rf-contrast);
+  }
+
+  .search button {
+    background: var(--rf-red);
+    color: white;
+    border: none;
+    padding: 10px 12px;
+    border-radius: 8px;
+    transition: background 0.2s;
+  }
+  .search button:hover {
+    background: #ff333f;
+  }
+
+  .clip {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .clip-card {
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid #333;
+    background: linear-gradient(180deg, #1b1c1f, #141517);
+    color: var(--rf-contrast);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .clip-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  }
+
+  .clip-title {
+    font-weight: 700;
+    color: var(--rf-red);
+  }
+
+  .clip-meta {
+    font-size: 0.85rem;
+    color: #aaa;
+  }
+
+  .clip-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .btn {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn:hover {
+    background: #42a5f5;
+  }
+
+  .btn-secondary {
+    background: transparent;
+    border: 1px solid #555;
+    color: var(--rf-contrast);
+    transition: border 0.2s, color 0.2s;
+  }
+  .btn-secondary:hover {
+    border-color: var(--rf-red);
+    color: var(--rf-red);
+  }
+
+  .mobile-player {
+    display: none;
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    background: rgba(30,31,35,0.95);
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+    align-items: center;
+    gap: 12px;
+    backdrop-filter: blur(6px);
+  }
+
+  .mobile-player .info {
+    flex: 1;
+    color: var(--rf-contrast);
+  }
+
+  @media (max-width:900px) {
+    .layout { grid-template-columns: 1fr; }
+    aside { height: auto; order: 2; }
+    #map { height: var(--map-height-mobile); }
+    .mobile-player { display: flex; }
+  }
+
+  .leaflet-control-container .leaflet-top.leaflet-left {
+    top: 80px;
+  }
+
+
+
+
+
+    /* Header global */
+    .site-header {
+      background: #151221;
+      color: #D3CDE4;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .site-header .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .site-header .brand-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      background: var(--rf-red);
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+    }
+    .site-header nav a {
+      color: inherit;
+      text-decoration: none;
+      margin-left: 16px;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .site-header nav a:hover {
+      color: white;
+    }
+
+
+
+</style>
+
+</head>
+<body>
+
+    <div class="site-header">
+    <div class="logo">
+      <div class="brand-mark">GM</div>
+      <div style="font-weight:700;">Partition Urbaine</div>
+    </div>
+    <nav>
+      <a href="#">Accueil</a>
+      <a href="rec.html">Enregistrement</a>
+      <a href="#">À propos</a>
+    </nav>
+  </div>
+
+<style>
+  .hero-overlay { background: linear-gradient(180deg, rgba(15,23,42,0.45), rgba(15,23,42,0.65)); }
+
+</style>
+
+  <main>
+  <!-- Nouveau header -->
+
+
+
+
+
+  <section class="relative">
+      <div class="h-[70vh] md:h-[66vh] bg-cover bg-center hero-overlay" style="background-image: url('img/1.webp');">
+        <div class="absolute inset-0 hero-overlay"></div>
+        <div class="relative z-10 max-w-6xl mx-auto px-6 h-full flex items-center">
+          <div class="max-w-2xl">
+            <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">Enregistrer et cartographier la mémoire sonore des rues</h1>
+            <p class="mt-4 text-lg md:text-l subtitle">La ville parle, mais rarement on l’écoute. Ses voix se mêlent, se superposent, se perdent parfois dans le bruit de fond de notre quotidien, elles composent une partition vivante, à la fois banale et unique, qui disparaît souvent sans laisser de trace.</p>
+            <!--<div class="mt-6 flex gap-3">
+              <a href="submit.html" class="px-5 py-3" id="submit">Soumettre un manuscrit</a>
+            </div>-->
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <section id="nouveautes" class="max-w-6xl mx-auto px-6 py-12">
+      <div class="flex items-center justify-between">
+        <h2 class="text-3xl font-bold">Dernières entrées</h2>
+        <!--<h2 class="text-3xl font-bold">Nouveautés</h2>-->
+      </div>
+      <!--
+      <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <article id="book" class="bg-white rounded-2xl shadow p-4 flex flex-col" aria-labelledby="book-1">
+          <img src="img/quand%20la%20femme%20%C3%A9crit%20la%20femme.png" alt="Couverture: Quand la femme écrit la femme : Une anthologie féminine et féministe" class="rounded-lg w-full h-auto object-cover">
+          <div class="mt-3 flex-1">
+            <h3 id="book-1" class="text-lg font-semibold">Quand la femme écrit la femme</h3>
+            <p class="text-sm text-slate-500 mt-1 genre">Anthologie traduite et commentée — <a href="auteurs/mikaella-genin.html" class="lien">Mikaëlla Génin</a></p>
+            <p class="text-sm mt-3">Et si la littérature nous permettait de lire l’Histoire à travers les voix oubliées des femmes ?</p>
+          </div>
+          <div class="mt-4 flex items-center justify-between">
+            <div class="text-sm text-slate-700 font-medium">Parution Janv. 2026</div>
+            <div class="flex gap-2">
+              <button class="px-3 py-1 text-sm btn">Détails</button>
+            </div>
+          </div>
+        </article>
+
+        <article id="book" class="bg-white rounded-2xl shadow p-4 flex flex-col" aria-labelledby="book-2">
+          <img src="img/migrassion.png" alt="Couverture: Migrassion" class="rounded-lg w-full h-auto object-cover">
+          <div class="mt-3 flex-1">
+            <h3 id="book-2" class="text-lg font-semibold">Migrassion </h3>
+            <p class="text-sm text-slate-500 mt-1 genre">Poésie — <a href="auteurs/auteur-migrassion.html" class="lien">Anonyme</a></p>
+            <p class="text-sm mt-3">Un recueil poétique anonyme, entre exil et langue</p>
+          </div>
+          <div class="mt-4 flex items-center justify-between">
+            <div class="text-sm text-slate-700 font-medium">Parution Janv. 2026</div>
+            <div class="flex gap-2">
+              <button class="px-3 py-1 text-sm btn">Détails</button>
+            </div>
+          </div>
+        </article>
+      </div>-->
+    </section>
+
+    <section id="nouveautes" class="max-w-6xl mx-auto px-6 py-12">
+      <h2 class="text-3xl font-bold mb-4">Note d’intention</h2>
+      <p>La ville parle, mais rarement on l’écoute. Ses voix se mêlent, se superposent, se perdent parfois dans le bruit de fond de notre quotidien. Pourtant, ces sons façonnent notre rapport intime aux lieux : le cri du marchand de fruits sur la place du marché, la rumeur douce d’un square un dimanche après-midi, la résonance métallique d’une passerelle de gare. Ils composent une partition vivante, à la fois banale et unique, qui disparaît souvent sans laisser de trace.</p>
+      <p><em>Partition Urbaine</em> est une tentative de capter cette mémoire fugace.
+Il s’agit d’arpenter la ville, micro en main, pour en extraire des fragments d’ambiances, de voix, de rythmes, et les conserver comme on conserverait une archive précieuse. Chaque enregistrement est réalisé in situ, dans un lieu précis, à un moment donné, afin de saisir son identité sonore.</p>
+<p>Au-delà du simple enregistrement, le projet se veut une cartographie sensible : les sons seront géolocalisés sur une carte interactive, accompagnés, si nécessaire, de courts textes explicatifs — traces d’histoires, indices sociaux, regards sur l’urbanisme et les usages. L’objectif est de permettre au public de voyager par l’oreille, de retrouver ou de découvrir la ville autrement.</p><p>Il ne s’agit pas seulement de documenter, mais aussi de révéler. L’oreille devient outil d’observation, la ville devient matière musicale, et chaque son, même le plus anodin, devient porteur de sens.
+Ce projet souhaite rappeler que l’identité d’une ville ne se lit pas uniquement dans ses pierres ou ses plans, mais aussi dans ses murmures.</p>
+    </section>
+
+  <section id="nouveautes" class="max-w-6xl mx-auto px-6 py-6">
+
+    <h2 class="text-3xl font-bold mb-4">Carte sonore</h2>
+
+    <p class="lead">Cliquez sur les marqueurs pour écouter une captation. Utilisez la liste pour naviguer et contrôler la lecture. Les fichiers proviennent d'un tableau JavaScript et la carte est entièrement responsive.</p>
+
+    <div class="layout">
+      <div>
+        <div id="map" aria-label="Carte des captations sonores"></div>
+      </div>
+
+      <aside>
+        <div class="search">
+          <input id="search" placeholder="Rechercher un titre ou une date..." />
+          <button id="reset">Réinitialiser</button>
+        </div>
+        <div class="clip" id="clipsList" aria-live="polite">
+          <!-- items injected here -->
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Mobile sticky player -->
+  <div class="mobile-player" id="mobilePlayer" style="display:none">
+    <div style="width:48px;height:48px;border-radius:6px;background:#f2f2f2;display:grid;place-items:center">♫</div>
+    <div class="info">
+      <div id="mp-title" style="font-weight:700">Titre</div>
+      <div id="mp-meta" style="font-size:0.85rem;color:#666">00:00 — 0.0s</div>
+    </div>
+    <div>
+      <button id="mp-play" class="btn">Play</button>
+    </div>
+  </section>
+
+  <!-- Audio element used globally -->
+  <audio id="globalAudio" crossorigin="anonymous"></audio>
+
+  <!-- Load Leaflet & MarkerCluster dynamically to avoid "L is not defined" errors -->
+  <script>
+    
+
+
+
+
+const sheetUrl = 'https://corsproxy.io/?https://docs.google.com/spreadsheets/d/16LhO82rFlzNwrnF6B64rKK91_Q7o0Cc9VhhuuJLu9eY/export?format=tsv&id=16LhO82rFlzNwrnF6B64rKK91_Q7o0Cc9VhhuuJLu9eY&gid=0';
+
+let clips = [];
+
+async function loadClips() {
+  const res = await fetch(sheetUrl);
+  const tsvText = await res.text();
+
+  const lines = tsvText.trim().split('\n');
+
+  clips = lines.map(line => {
+    const [latStr, lonStr, date, heure, dureeStr, titre, description, lien] = line.split('\t');
+
+    return {
+      lat: parseFloat(latStr.replace(',', '.')),
+      lon: parseFloat(lonStr.replace(',', '.')),
+      date: date.trim(),
+      heure: heure.trim(),
+      duree: parseFloat(dureeStr),
+      titre: titre.trim(),
+      description: description.trim(),
+      lien: lien.trim()
+    };
+  });
+
+  console.log(clips); // tu peux l'utiliser directement après ça
+}
+
+// Fonction principale qui attend le chargement
+async function main() {
+
+  await loadClips(); // Attend que clips2 soit rempli
+  console.log(clips); // clips2 est bien rempli ici
+
+
+// simple script loader that appends to document.head
+    function loadScript(src){
+      return new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = src;
+        s.async = false; // preserve execution order
+        s.onload = () => resolve(src);
+        s.onerror = (e) => reject(new Error('Failed to load script: ' + src));
+        document.head.appendChild(s);
+      });
+    }
+
+    function showFatalError(message, details){
+      console.error(message, details);
+      const overlay = document.createElement('div');
+      overlay.className = 'loader-overlay';
+      overlay.innerHTML = `<div class="loader-box"><strong>${message}</strong><div style="margin-top:8px;color:#666">${details || ''}</div></div>`;
+      document.body.appendChild(overlay);
+    }
+
+    // try to load leaflet + markercluster sequentially, then init
+    (async function bootstrap(){
+      try{
+        // load Leaflet first
+        await loadScript('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js');
+        // then markercluster (depends on L)
+        await loadScript('https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js');
+        // short pause to ensure globals are set (usually unnecessary but safe)
+        if(typeof L === 'undefined'){
+          // give a tiny delay and re-check
+          await new Promise(r=>setTimeout(r,50));
+        }
+        if(typeof L === 'undefined') throw new Error('Leaflet global (L) not available after loading scripts');
+        initMap();
+      }catch(err){
+        showFatalError('Erreur : impossible de charger les bibliothèques cartographiques.', err.message || err);
+      }
+    })();
+
+
+
+
+    function normalizedLink(url){
+      if(!url) return url;
+      // if it's already the uc?export=download form, return
+      if(url.includes('uc?export=download')) return url;
+      // match /d/<id>/ or /d/<id>$
+      const m = url.match(/\/d\/([a-zA-Z0-9_-]+)(?:\/|$)/);
+      if(m && m[1]) return `https://corsproxy.io/?https://drive.google.com/uc?export=download&id=${m[1]}`;
+      // fallback to leaving the URL as-is
+      return url;
+    }
+
+    function initMap(){
+      try{
+        // create map
+        const map = L.map('map', { zoomControl:true, attributionControl:false }).setView([43.6,1.38], 12);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://www.carto.com/">CARTO</a>',
+  subdomains: 'abcd',
+  maxZoom: 19
+}).addTo(map);
+
+
+        const markers = L.markerClusterGroup();
+        const audio = document.getElementById('globalAudio');
+        let currentId = null;
+
+        function formatDuration(sec){
+          if(!sec && sec !== 0) return '0s';
+          return Math.round(sec*10)/10 + 's';
+        }
+
+        function createClipCard(clip, idx){
+          const div = document.createElement('div');
+          div.className = 'clip-card';
+          div.dataset.idx = idx;
+
+          div.innerHTML = `
+            <div class="clip-title">${escapeHtml(clip.titre)}</div>
+            <div class="clip-meta">${escapeHtml(clip.date)} • ${escapeHtml(clip.heure)} • ${formatDuration(clip.duree)}</div>
+            <div style="margin-top:8px">${escapeHtml(clip.description || '')}</div>
+            <div class="clip-controls">
+              <button class="btn play" data-idx="${idx}">▶ Écouter</button>
+              <button class="btn locate" data-idx="${idx}">📍 Voir sur la carte</button>
+            </div>
+          `;/* <a class="btn-secondary" href="${escapeAttr(clip.lien)}" target="_blank" rel="noopener">Télécharger</a> */
+
+          return div;
+        }
+
+        function addClipsToSidebar(list){
+          const container = document.getElementById('clipsList');
+          container.innerHTML='';
+          list.forEach((clip, idx)=> container.appendChild(createClipCard(clip, idx)));
+
+          // hook buttons
+          container.querySelectorAll('.play').forEach(btn=>{
+            btn.addEventListener('click', e=>{
+              const i = Number(btn.dataset.idx);
+              playClip(i);
+            });
+          });
+          container.querySelectorAll('.locate').forEach(btn=>{
+            const i = Number(btn.dataset.idx);
+            btn.addEventListener('click', ()=>{
+              const c = list[i];
+              if(c) map.flyTo([c.lat,c.lon],16);
+            })
+          })
+        }
+
+        // add markers
+        clips.forEach((clip, idx)=>{
+          if(typeof clip.lat !== 'number' || typeof clip.lon !== 'number') return;
+          const m = L.marker([clip.lat, clip.lon]);
+
+          const popupContent = document.createElement('div');
+          popupContent.innerHTML = `<strong>${escapeHtml(clip.titre)}</strong><br/><em>${escapeHtml(clip.date)} ${escapeHtml(clip.heure)}</em><br/><div style='margin-top:8px'>${escapeHtml(clip.description || '')}</div><div style='margin-top:8px'><button data-idx='${idx}' class='popup-play'>▶ Écouter</button></div>`;
+
+          m.bindPopup(popupContent);
+
+          m.on('popupopen', (e)=>{
+            try{
+              const btn = e.popup._contentNode && e.popup._contentNode.querySelector && e.popup._contentNode.querySelector('.popup-play');
+              if(btn) btn.addEventListener('click', ()=> playClip(idx));
+            }catch(err){
+              console.warn('Impossible dattacher lévénement popup-play', err);
+            }
+          });
+
+          markers.addLayer(m);
+        });
+
+        map.addLayer(markers);
+
+        // Fit bounds if we have coordinates (safe handling for 1 point)
+        const latlngs = clips.filter(c=>typeof c.lat === 'number' && typeof c.lon === 'number').map(c=>[c.lat,c.lon]);
+        safeFitBounds(latlngs, map);
+
+        // Play logic
+        function playClip(idx){
+          const clip = clips[idx];
+          if(!clip) return;
+          const url = normalizedLink(clip.lien);
+          currentId = idx;
+          audio.src = url;
+          audio.play().catch(err=>{
+            console.warn('Lecture bloquée par le navigateur — interaction requise',err);
+          });
+          // update mobile player
+          document.getElementById('mp-title').textContent = clip.titre;
+          document.getElementById('mp-meta').textContent = `${clip.date} • ${formatDuration(clip.duree)}`;
+          document.getElementById('mobilePlayer').style.display = '';
+          document.getElementById('mp-play').textContent = 'Pause';
+        }
+
+        // audio event handlers
+        audio.addEventListener('ended', ()=>{
+          document.getElementById('mp-play').textContent = 'Play';
+        });
+
+        document.getElementById('mp-play').addEventListener('click', ()=>{
+          if(audio.paused){
+            audio.play();
+            document.getElementById('mp-play').textContent = 'Pause';
+          } else {
+            audio.pause();
+            document.getElementById('mp-play').textContent = 'Play';
+          }
+        });
+
+        // Search & filter
+        const search = document.getElementById('search');
+        const reset = document.getElementById('reset');
+
+        function filterClips(q){
+          if(!q) return clips;
+          q = q.toLowerCase().trim();
+          return clips.filter(c=> (c.titre||'').toLowerCase().includes(q) || (c.description||'').toLowerCase().includes(q) || (c.date||'').toLowerCase().includes(q));
+        }
+
+        search.addEventListener('input', ()=>{
+          const filtered = filterClips(search.value);
+          addClipsToSidebar(filtered);
+        });
+        reset.addEventListener('click', ()=>{search.value='';addClipsToSidebar(clips);safeFitBounds(latlngs, map)});
+
+        // initially populate sidebar
+        addClipsToSidebar(clips);
+
+        // Accessibility: keyboard focus for popups
+        map.on('popupopen', ()=>{
+          const el = document.querySelector('.leaflet-popup button');
+          if(el) el.focus();
+        });
+
+        // helper functions
+        function safeFitBounds(lls, mapInstance){
+          if(!lls || lls.length===0) return;
+          if(lls.length===1) mapInstance.setView(lls[0], 14);
+          else mapInstance.fitBounds(lls, {padding:[40,40]});
+        }
+
+        // micro-helpers to prevent XSS from data
+        function escapeHtml(str){
+          if(!str) return '';
+          return String(str).replace(/[&<>\"']/g, function(s){
+            return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[s];
+          });
+        }
+        function escapeAttr(s){ return s ? s.replace(/"/g, '&quot;') : ''; }
+
+      }catch(err){
+        showFatalError('Erreur d\'initialisation de la carte', err && err.message ? err.message : err);
+      }
+    }
+}
+
+main();
+
+
+  </script>
+</main>
+</body>
+</html>
