@@ -255,6 +255,10 @@
     let startTime = 0, endTime = 0;
     let lastAudioBlob = null;
 
+
+
+
+
     // Optionnel : collecte de la position
     let position = { lat: null, lon: null };
     if ("geolocation" in navigator) {
@@ -416,6 +420,13 @@
       const now = new Date();
       const date = now.toLocaleDateString();
       const heure = now.toLocaleTimeString();
+
+      if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        ({coords}) => { position.lat = coords.latitude; position.lon = coords.longitude; },
+        () => {}, { enableHighAccuracy: true, maximumAge: 10_000, timeout: 5_000 }
+      );
+    }
 
       // Journal local
       data.push({
