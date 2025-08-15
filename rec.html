@@ -471,7 +471,7 @@ nav a:hover::after {
       }
     }
 
-    //initMic();
+    initMic();
 
      // Journal local
     const data = [];
@@ -522,7 +522,7 @@ nav a:hover::after {
 
     startBtn.onclick = async () => {
       try {
-        if (!audioStream) await initMic();
+        /*if (!audioStream) await initMic();*/
         audioBufferData = [];
         recording = true;
         startTime = Date.now();
