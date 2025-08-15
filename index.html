@@ -49,16 +49,7 @@
     gap: 10px;
   }
 
-  .brand-mark {
-    width: 44px;
-    height: 44px;
-    border-radius: 6px;
-    background: var(--rf-red);
-    display: grid;
-    place-items: center;
-    color: var(--rf-contrast);
-    font-weight: 700;
-  }
+
 
   h1 {
     font-size: 1.25rem;
@@ -69,6 +60,7 @@
   p.lead {
     margin: 6px 0 18px;
     color: #ccc;
+    color: #C2BCD7;
   }
       p {
       padding-top: 0.5em;
@@ -145,13 +137,12 @@
     transition: transform 0.15s, box-shadow 0.15s;
   }
   .clip-card:hover {
-    transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.5);
   }
 
   .clip-title {
     font-weight: 700;
-    color: var(--rf-red);
+    color: white;
   }
 
   .clip-meta {
@@ -167,16 +158,14 @@
   }
 
   .btn {
-    padding: 8px 10px;
-    border-radius: 8px;
     border: none;
-    background: var(--accent);
+
     color: white;
     cursor: pointer;
     transition: background 0.2s;
   }
   .btn:hover {
-    background: #42a5f5;
+    text-decoration: underline;
   }
 
   .btn-secondary {
@@ -225,39 +214,7 @@
 
 
 
-    /* Header global */
-    .site-header {
-      background: #151221;
-      color: #D3CDE4;
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .site-header .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .site-header .brand-mark {
-      width: 40px;
-      height: 40px;
-      border-radius: 6px;
-      background: var(--rf-red);
-      display: grid;
-      place-items: center;
-      font-weight: 700;
-    }
-    .site-header nav a {
-      color: inherit;
-      text-decoration: none;
-      margin-left: 16px;
-      font-weight: 600;
-      transition: color 0.2s;
-    }
-    .site-header nav a:hover {
-      color: white;
-    }
+
 
 
 
@@ -266,17 +223,160 @@
 </head>
 <body>
 
-    <div class="site-header">
-    <div class="logo">
-      <div class="brand-mark">GM</div>
-      <div style="font-weight:700;">Partition Urbaine</div>
+  
+<style>
+:root {
+  --brand-bg: #151221;
+  --brand-text: #D3CDE4;
+  --brand-accent: #762B84;
+}
+
+/* HEADER GLOBAL */
+.site-header {
+  background: var(--brand-bg);
+  color: var(--brand-text);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: system-ui, sans-serif;
+  position: relative;
+  z-index: 1000;
+}
+
+/* LOGO */
+.site-header .logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.site-header .brand-mark {
+  width: 42px;
+  height: 42px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: white;
+  font-size: 1rem;
+  letter-spacing: 1px;
+}
+
+/* Image logo spécifique */
+.site-header .brand-mark img {
+  width: 42px;
+  height: 42px;
+  border-radius: 6px;
+  object-fit: contain;
+}
+
+/* NAVIGATION */
+nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+nav a {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+  position: relative;
+  padding: 4px 0;
+  transition: color 0.25s ease;
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: var(--brand-accent);
+  transition: width 0.25s ease;
+}
+
+nav a:hover {
+  color: white;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+/* MENU BURGER */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.menu-toggle span {
+  width: 24px;
+  height: 2px;
+  background: var(--brand-text);
+  transition: 0.3s;
+}
+
+/* RESPONSIVE */
+@media (max-width: 700px) {
+  nav {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: var(--brand-bg);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px 20px;
+    gap: 16px;
+    transform: translateY(-20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    width: 100vw;
+  }
+  nav.active {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .menu-toggle {
+    display: flex;
+  }
+}
+
+@media (min-width: 768px) {
+  .no-mobile {
+    display: none;
+  }
+}
+</style>
+
+<div class="site-header">
+  <div class="logo">
+    <!-- Remplace "logo.png" par le chemin réel de ton logo -->
+    <div class="brand-mark no-mobile">
+      <img src="logo.png" alt="Logo Partition Urbaine" />
     </div>
-    <nav>
-      <a href="#">Accueil</a>
-      <a href="rec.html">Enregistrement</a>
-      <a href="#">À propos</a>
-    </nav>
+    <div style="font-weight:700; font-size:1.1rem;">Partition Urbaine</div>
   </div>
+
+  <div class="menu-toggle" onclick="document.querySelector('nav').classList.toggle('active')">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <nav>
+    <a href="#">Accueil</a>
+    <a href="rec.html">Enregistrement</a>
+    <a href="#">À propos</a>
+  </nav>
+</div>
+
+
 
 <style>
   .hero-overlay { background: linear-gradient(180deg, rgba(15,23,42,0.45), rgba(15,23,42,0.65)); }
@@ -305,53 +405,62 @@
       </div>
     </section>
 
+    <section id="derniers-audios" class="max-w-6xl mx-auto px-6 py-8 mt-3">
+  <h2 class="text-3xl font-bold mb-7">Dernières entrées</h2>
+  <div id="latestClips" class="grid grid-cols-1 sm:grid-cols-3 gap-6"></div>
+</section>
 
-    <section id="nouveautes" class="max-w-6xl mx-auto px-6 py-12">
-      <div class="flex items-center justify-between">
-        <h2 class="text-3xl font-bold">Dernières entrées</h2>
-        <!--<h2 class="text-3xl font-bold">Nouveautés</h2>-->
-      </div>
-      <!--
-      <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<style>
+  /* Image de fond pour la section des derniers sons */
 
-        <article id="book" class="bg-white rounded-2xl shadow p-4 flex flex-col" aria-labelledby="book-1">
-          <img src="img/quand%20la%20femme%20%C3%A9crit%20la%20femme.png" alt="Couverture: Quand la femme écrit la femme : Une anthologie féminine et féministe" class="rounded-lg w-full h-auto object-cover">
-          <div class="mt-3 flex-1">
-            <h3 id="book-1" class="text-lg font-semibold">Quand la femme écrit la femme</h3>
-            <p class="text-sm text-slate-500 mt-1 genre">Anthologie traduite et commentée — <a href="auteurs/mikaella-genin.html" class="lien">Mikaëlla Génin</a></p>
-            <p class="text-sm mt-3">Et si la littérature nous permettait de lire l’Histoire à travers les voix oubliées des femmes ?</p>
-          </div>
-          <div class="mt-4 flex items-center justify-between">
-            <div class="text-sm text-slate-700 font-medium">Parution Janv. 2026</div>
-            <div class="flex gap-2">
-              <button class="px-3 py-1 text-sm btn">Détails</button>
-            </div>
-          </div>
-        </article>
 
-        <article id="book" class="bg-white rounded-2xl shadow p-4 flex flex-col" aria-labelledby="book-2">
-          <img src="img/migrassion.png" alt="Couverture: Migrassion" class="rounded-lg w-full h-auto object-cover">
-          <div class="mt-3 flex-1">
-            <h3 id="book-2" class="text-lg font-semibold">Migrassion </h3>
-            <p class="text-sm text-slate-500 mt-1 genre">Poésie — <a href="auteurs/auteur-migrassion.html" class="lien">Anonyme</a></p>
-            <p class="text-sm mt-3">Un recueil poétique anonyme, entre exil et langue</p>
-          </div>
-          <div class="mt-4 flex items-center justify-between">
-            <div class="text-sm text-slate-700 font-medium">Parution Janv. 2026</div>
-            <div class="flex gap-2">
-              <button class="px-3 py-1 text-sm btn">Détails</button>
-            </div>
-          </div>
-        </article>
-      </div>-->
-    </section>
+
+      #latestClips .clip-card {
+      position: relative;
+      overflow: hidden;
+      background-image: url('img/3.webp');
+      background-size: cover;
+      background-position: center;
+      border: 1px solid var(--ring);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      color: white;
+    }
+
+    #latestClips .clip-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.45), rgba(15, 23, 42, 0.65));
+      z-index: 0;
+    }
+
+    #latestClips .clip-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+
+/*
+  .clip-card {
+    background: url('img/1.webp') center/cover no-repeat;
+    border-radius: 12px;
+    padding: 2rem;
+  }*/
+
+
+</style>
+
+</style>
 
     <section id="nouveautes" class="max-w-6xl mx-auto px-6 py-12">
       <h2 class="text-3xl font-bold mb-4">Note d’intention</h2>
       <p>La ville parle, mais rarement on l’écoute. Ses voix se mêlent, se superposent, se perdent parfois dans le bruit de fond de notre quotidien. Pourtant, ces sons façonnent notre rapport intime aux lieux : le cri du marchand de fruits sur la place du marché, la rumeur douce d’un square un dimanche après-midi, la résonance métallique d’une passerelle de gare. Ils composent une partition vivante, à la fois banale et unique, qui disparaît souvent sans laisser de trace.</p>
       <p><em>Partition Urbaine</em> est une tentative de capter cette mémoire fugace.
 Il s’agit d’arpenter la ville, micro en main, pour en extraire des fragments d’ambiances, de voix, de rythmes, et les conserver comme on conserverait une archive précieuse. Chaque enregistrement est réalisé in situ, dans un lieu précis, à un moment donné, afin de saisir son identité sonore.</p>
-<p>Au-delà du simple enregistrement, le projet se veut une cartographie sensible : les sons seront géolocalisés sur une carte interactive, accompagnés, si nécessaire, de courts textes explicatifs — traces d’histoires, indices sociaux, regards sur l’urbanisme et les usages. L’objectif est de permettre au public de voyager par l’oreille, de retrouver ou de découvrir la ville autrement.</p><p>Il ne s’agit pas seulement de documenter, mais aussi de révéler. L’oreille devient outil d’observation, la ville devient matière musicale, et chaque son, même le plus anodin, devient porteur de sens.
+<p>Au-delà du simple enregistrement, le projet se veut une cartographie sensible : les sons seront géolocalisés sur une carte interactive, accompagnés, si nécessaire, de courts textes explicatifs, traces d’histoires, indices sociaux, regards sur l’urbanisme et les usages. L’objectif est de permettre au public de voyager par l’oreille, de retrouver ou de découvrir la ville autrement.</p><p>Il ne s’agit pas seulement de documenter, mais aussi de révéler. L’oreille devient outil d’observation, la ville devient matière musicale, et chaque son, même le plus anodin, devient porteur de sens.
 Ce projet souhaite rappeler que l’identité d’une ville ne se lit pas uniquement dans ses pierres ou ses plans, mais aussi dans ses murmures.</p>
     </section>
 
@@ -369,7 +478,6 @@ Ce projet souhaite rappeler que l’identité d’une ville ne se lit pas unique
       <aside>
         <div class="search">
           <input id="search" placeholder="Rechercher un titre ou une date..." />
-          <button id="reset">Réinitialiser</button>
         </div>
         <div class="clip" id="clipsList" aria-live="polite">
           <!-- items injected here -->
@@ -432,6 +540,43 @@ async function loadClips() {
 async function main() {
 
   await loadClips(); // Attend que clips2 soit rempli
+
+  function afficherDerniersAudios() {
+  // On trie par date (puis heure) du plus récent au plus ancien
+  const derniers = [...clips].sort((a, b) => {
+    const da = new Date(a.date.split('/').reverse().join('-') + 'T' + (a.heure || '00:00'));
+    const db = new Date(b.date.split('/').reverse().join('-') + 'T' + (b.heure || '00:00'));
+    return db - da;
+  }).slice(0, 3);
+
+  const container = document.getElementById('latestClips');
+  container.innerHTML = '';
+
+  derniers.forEach((clip, idx) => {
+    const card = document.createElement('div');
+    card.className = 'clip-card';
+    card.innerHTML = `
+      <div class="clip-title">${clip.titre}</div>
+      <div class="clip-meta">${clip.date} • ${clip.heure} • ${clip.duree}s</div>
+      <div style="margin-top:8px">${clip.description || ''}</div>
+      <div class="clip-controls mt-3">
+        <button class="btn play-latest" data-url="${normalizedLink(clip.lien)}">▶ Écouter</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  // Lecture au clic
+  document.querySelectorAll('.play-latest').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const audio = document.getElementById('globalAudio');
+      audio.src = btn.dataset.url;
+      audio.play();
+    });
+  });
+}
+
+afficherDerniersAudios();
   console.log(clips); // clips2 est bien rempli ici
 
 
@@ -491,7 +636,7 @@ async function main() {
     function initMap(){
       try{
         // create map
-        const map = L.map('map', { zoomControl:true, attributionControl:false }).setView([43.6,1.38], 12);
+        const map = L.map('map', { zoomControl:false, attributionControl:false }).setView([43.6,1.38], 12);
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://www.carto.com/">CARTO</a>',
@@ -519,8 +664,8 @@ async function main() {
             <div class="clip-meta">${escapeHtml(clip.date)} • ${escapeHtml(clip.heure)} • ${formatDuration(clip.duree)}</div>
             <div style="margin-top:8px">${escapeHtml(clip.description || '')}</div>
             <div class="clip-controls">
-              <button class="btn play" data-idx="${idx}">▶ Écouter</button>
-              <button class="btn locate" data-idx="${idx}">📍 Voir sur la carte</button>
+              <button class="btn play" data-idx="${idx}">Écouter</button>
+              <button class="btn locate" data-idx="${idx}">Voir sur la carte</button>
             </div>
           `;/* <a class="btn-secondary" href="${escapeAttr(clip.lien)}" target="_blank" rel="noopener">Télécharger</a> */
 
@@ -551,7 +696,25 @@ async function main() {
         // add markers
         clips.forEach((clip, idx)=>{
           if(typeof clip.lat !== 'number' || typeof clip.lon !== 'number') return;
-          const m = L.marker([clip.lat, clip.lon]);
+
+
+const customIcon = new L.DivIcon({
+  className: 'custom-svg-icon',
+  html: `
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="34" viewBox="0 0 36 50">
+      <path d="M18 0C8.06 0 0 8.06 0 18c0 12.03 18 32 18 32s18-19.97 18-32C36 8.06 27.94 0 18 0z" fill="#762B84"/>
+      <circle cx="18" cy="18" r="7" fill="white"/>
+    </svg>
+  `,
+  iconSize: [36, 50],
+  iconAnchor: [18, 50],
+  popupAnchor: [0, -50]
+});
+
+
+const m = L.marker([clip.lat, clip.lon], { icon: customIcon });
+
+
 
           const popupContent = document.createElement('div');
           popupContent.innerHTML = `<strong>${escapeHtml(clip.titre)}</strong><br/><em>${escapeHtml(clip.date)} ${escapeHtml(clip.heure)}</em><br/><div style='margin-top:8px'>${escapeHtml(clip.description || '')}</div><div style='margin-top:8px'><button data-idx='${idx}' class='popup-play'>▶ Écouter</button></div>`;
@@ -610,7 +773,6 @@ async function main() {
 
         // Search & filter
         const search = document.getElementById('search');
-        const reset = document.getElementById('reset');
 
         function filterClips(q){
           if(!q) return clips;
@@ -622,7 +784,6 @@ async function main() {
           const filtered = filterClips(search.value);
           addClipsToSidebar(filtered);
         });
-        reset.addEventListener('click', ()=>{search.value='';addClipsToSidebar(clips);safeFitBounds(latlngs, map)});
 
         // initially populate sidebar
         addClipsToSidebar(clips);
@@ -661,7 +822,7 @@ main();
   </script>
 </main>
 <footer style="padding-top: 100px; padding-bottom: 10px; text-align: center;">
-  Gaël Maignan 2025
+  Gaël Maignan — Tous droits réservés
 </footer>
 </body>
 </html>

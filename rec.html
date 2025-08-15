@@ -7,25 +7,28 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Tailwind via CDN pour prototype rapide -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
 
   <style>
     /* --- Style global sombre --- */
-    body {
-      font-family: 'Outfit', sans-serif;
-      background: linear-gradient(135deg, #121212, #1f1f1f);
+
+
+      html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Outfit', sans-serif;
+    background: linear-gradient(135deg, #121212, #1f1f1f);
       color: #f0f0f0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-      margin: 0;
-      min-height: 100vh;
-    }
-    h1 {
-      margin-bottom: 0px;
-      font-size: clamp(1.6rem, 4vw, 2.2rem);
-      font-weight: 700;
-    }
+  }
+
+
+
 
     a {
       color: #C2BCD7;
@@ -53,7 +56,7 @@
     button:active { transform: scale(0.96); }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
     #startBtn { background: linear-gradient(135deg, #762B84, #9d44b8); color: white; }
-    #stopBtn  {  color: white;  background: transparent;
+    #stopBtn  {  color: white;  background: transparent; padding: 12px 26px;
       border: solid #762B84 3px;}
     /* --- Statut --- */
     #status {
@@ -66,12 +69,171 @@
   </style>
 </head>
 <body>
+  
+<style>
+:root {
+  --brand-bg: #151221;
+  --brand-text: #D3CDE4;
+  --brand-accent: #762B84;
+}
 
-  <div style="max-width:1000px; text-align: center;">
+/* HEADER GLOBAL */
+.site-header {
+  background: var(--brand-bg);
+  color: var(--brand-text);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: system-ui, sans-serif;
+  position: relative;
+  z-index: 1000;
+}
 
-      <h1>Partition Urbaine</h1>
+/* LOGO */
+.site-header .logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.site-header .brand-mark {
+  width: 42px;
+  height: 42px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: white;
+  font-size: 1rem;
+  letter-spacing: 1px;
+}
 
-  <p style="color: #C2BCD7;">La ville s’exprime sans cesse, mais trop souvent, ses murmures nous échappent. Ses voix s’entrelacent, se superposent, se noient parfois dans le brouhaha de nos vies. Et si nous prenions le temps d’enregistrer cette partition vivante ?</p>
+/* Image logo spécifique */
+.site-header .brand-mark img {
+  width: 42px;
+  height: 42px;
+  border-radius: 6px;
+  object-fit: contain;
+}
+
+/* NAVIGATION */
+nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+nav a {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+  position: relative;
+  padding: 4px 0;
+  transition: color 0.25s ease;
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: var(--brand-accent);
+  transition: width 0.25s ease;
+}
+
+nav a:hover {
+  color: white;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+/* MENU BURGER */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.menu-toggle span {
+  width: 24px;
+  height: 2px;
+  background: var(--brand-text);
+  transition: 0.3s;
+}
+
+/* RESPONSIVE */
+@media (max-width: 700px) {
+  nav {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: var(--brand-bg);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px 20px;
+    gap: 16px;
+    transform: translateY(-20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    width: 100vw;
+  }
+  nav.active {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .menu-toggle {
+    display: flex;
+  }
+}
+
+@media (min-width: 768px) {
+  .no-mobile {
+    display: none;
+  }
+}
+</style>
+
+<div class="site-header">
+  <div class="logo">
+    <!-- Remplace "logo.png" par le chemin réel de ton logo -->
+    <div class="brand-mark no-mobile">
+      <img src="logo.png" alt="Logo Partition Urbaine" />
+    </div>
+    <div style="font-weight:700; font-size:1.1rem;">Partition Urbaine</div>
+  </div>
+
+  <div class="menu-toggle" onclick="document.querySelector('nav').classList.toggle('active')">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="#">Enregistrement</a>
+    <a href="#">À propos</a>
+  </nav>
+</div>
+
+
+<main>
+
+
+
+
+
+  <div style="max-width:1000px; text-align: center; margin: auto;">
+
+      <h1 class="text-4xl mt-6" style="font-weight:600;">Partition Urbaine</h1>
+
+  <p style="color: #C2BCD7; padding: 1rem;">La ville s’exprime sans cesse, mais trop souvent, ses murmures nous échappent. Ses voix s’entrelacent, se superposent, se noient parfois dans le brouhaha de nos vies. Et si nous prenions le temps d’enregistrer cette partition vivante ?</p>
     
   </div>
 
@@ -413,11 +575,13 @@
         return;
       }
 
-      const titre = titreInput.value.trim();
-      const description = descriptionInput.value.trim();
-      const dureeSec = metadataBox.dataset.duree || ((endTime - startTime) / 1000).toFixed(1);
 
       const now = new Date();
+
+      const titre = titreInput.value.trim() || `Enregistrement`;
+      const description = descriptionInput.value.trim() || `${titre} — ${now.toLocaleDateString()}`;
+      const dureeSec = metadataBox.dataset.duree || ((endTime - startTime) / 1000).toFixed(1);
+
       const date = now.toLocaleDateString();
       const heure = now.toLocaleTimeString();
 
@@ -532,5 +696,6 @@
       } catch {}
     });
   </script>
+</main>
 </body>
 </html>
