@@ -20,7 +20,7 @@
 
 
       html, body {
-    height: 100%;
+        padding-bottom: 1rem;
     margin: 0;
     font-family: 'Outfit', sans-serif;
     background: linear-gradient(135deg, #121212, #1f1f1f);
@@ -201,13 +201,13 @@ nav a:hover::after {
 </style>
 
 <div class="site-header">
-  <div class="logo">
+  <a href="index.html" class="logo">
     <!-- Remplace "logo.png" par le chemin réel de ton logo -->
     <div class="brand-mark no-mobile">
       <img src="logo.png" alt="Logo Partition Urbaine" />
     </div>
     <div style="font-weight:700; font-size:1.1rem;">Partition Urbaine</div>
-  </div>
+  </a>
 
   <div class="menu-toggle" onclick="document.querySelector('nav').classList.toggle('active')">
     <span></span>
@@ -236,6 +236,8 @@ nav a:hover::after {
   <p style="color: #C2BCD7; padding: 1rem;">La ville s’exprime sans cesse, mais trop souvent, ses murmures nous échappent. Ses voix s’entrelacent, se superposent, se noient parfois dans le brouhaha de nos vies. Et si nous prenions le temps d’enregistrer cette partition vivante ?</p>
     
   </div>
+
+
 
 
   <div class="controls">
@@ -295,7 +297,7 @@ nav a:hover::after {
   color: #e4e4e4;
 }
 
-.metadata-box input,
+.metadata-box #titreInput,
 .metadata-box textarea {
   width: 100%;
   padding: 12px 14px;
@@ -369,6 +371,93 @@ nav a:hover::after {
     padding: 10px;
   }
 }
+
+
+
+
+
+/* --- Dropdown --- */
+.dropdown {
+  position: relative;
+  width: 100%;
+  font-size: 15px;
+  user-select: none;
+}
+
+.dropdown-toggle {
+  background: #1e1e1e;
+  color: #f8f8f8;
+  padding: 12px 14px;
+  border: 1px solid #3a3a3a;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dropdown-toggle::after {
+  content: "▾"; /* petite flèche */
+  font-size: 14px;
+  color: #bbb;
+  margin-left: 8px;
+  transition: transform 0.25s ease;
+}
+
+.dropdown.open .dropdown-toggle::after {
+  transform: rotate(-180deg);
+}
+
+.dropdown-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 12px;
+  padding: 8px 0;
+  z-index: 20;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  max-height: 220px;         /* ✅ défilement si trop d'options */
+  overflow-y: auto;
+  opacity: 0;
+  transform: translateY(-5px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.dropdown.open .dropdown-menu {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.dropdown-menu label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-weight: 400;
+  color: #e4e4e4;
+}
+
+.dropdown-menu label:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.dropdown-menu input[type="checkbox"] {
+  accent-color: #9d44b8;
+  cursor: pointer;
+}
+
+
 </style>
 
 <div id="metadataBox" class="metadata-box">
@@ -378,6 +467,18 @@ nav a:hover::after {
   <label for="descriptionInput">Description :</label>
   <textarea id="descriptionInput" rows="3" placeholder="Description (optionnel)"></textarea>
 
+<label>Catégories :</label>
+  <div class="dropdown">
+    <div class="dropdown-toggle" id="dropdownToggle">Sélectionner des catégories</div>
+    <div class="dropdown-menu">
+      <label><input type="checkbox" value="souvenirs-enfance"> Souvenirs d'enfance</label>
+      <label><input type="checkbox" value="chaleur-urbaine"> Chaleur urbaine</label>
+      <label><input type="checkbox" value="mutation-urbaine"> Mutation urbaine</label>
+      <label><input type="checkbox" value="nuisances-urgences"> Nuisances et Urgences</label>
+      <label><input type="checkbox" value="musique-urbaine"> Scènes à ciel ouvert</label>
+    </div>
+  </div>
+
   <audio id="audioPlayback" controls></audio>
 
   <button id="submitBtn">SOUMETTRE</button>
@@ -385,6 +486,37 @@ nav a:hover::after {
 
 
 
+<script>document.addEventListener("DOMContentLoaded", () => {
+  const dropdown = document.querySelector(".dropdown");
+  const toggle = document.getElementById("dropdownToggle");
+  const menu = dropdown.querySelector(".dropdown-menu");
+  const checkboxes = menu.querySelectorAll("input[type='checkbox']");
+
+  // Ouvrir / fermer
+  toggle.addEventListener("click", () => {
+    dropdown.classList.toggle("open");
+  });
+
+  // Fermer si clic en dehors
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".dropdown")) {
+      dropdown.classList.remove("open");
+    }
+  });
+
+  // Affichage des choix sélectionnés
+  checkboxes.forEach(cb => {
+    cb.addEventListener("change", () => {
+      const selected = [...checkboxes]
+        .filter(c => c.checked)
+        .map(c => c.parentNode.textContent.trim());
+      toggle.textContent = selected.length ? selected.join(", ") : "Sélectionner des catégories";
+    });
+  });
+});
+
+
+</script>
 
 
 
@@ -419,8 +551,6 @@ nav a:hover::after {
 
 
 
-
-
     // Optionnel : collecte de la position
     let position = { lat: null, lon: null };
     if ("geolocation" in navigator) {
@@ -446,7 +576,7 @@ nav a:hover::after {
         sampleRate = audioContext.sampleRate;
 
         sourceNode = audioContext.createMediaStreamSource(audioStream);
-        processorNode = audioContext.createScriptProcessor(4096, 1, 1);
+        processorNode = audioContext.createScriptProcessor(8192, 1, 1);
 
         // Gain à zéro pour éviter tout larsen/monitoring audible
         silentGain = audioContext.createGain();
@@ -657,8 +787,43 @@ nav a:hover::after {
   }
 }
 
+
+
+
+  const checkboxes = document.querySelectorAll(".dropdown-menu input[type='checkbox']");
+  
+  // Créer un tableau pour stocker les valeurs sélectionnées
+  const selectedValues = [];
+  
+  // Parcourir toutes les cases à cocher
+  checkboxes.forEach(checkbox => {
+    if (checkbox.checked) {
+      // Si la case est cochée, ajouter sa valeur au tableau
+      selectedValues.push(checkbox.value);
+    }
+  });
+
+
+
+
+
+
+
+
+    // Créer le texte à afficher, avec des points-virgules séparant les valeurs
+    const resultText = selectedValues.join("; ");
+    
+
+
+
+
+
+
+
+
+
               googleSheets(
-                  [position.lat, position.lon, date, heure, dureeSec, titre, description, result.fileUrl],
+                  [position.lat, position.lon, date, heure, dureeSec, titre, description, result.fileUrl, resultText],
                   "16LhO82rFlzNwrnF6B64rKK91_Q7o0Cc9VhhuuJLu9eY",
                   "Feuille 1"
               );

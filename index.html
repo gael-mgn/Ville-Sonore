@@ -13,10 +13,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+
   <!-- Tailwind via CDN pour prototype rapide -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/script.js"></script>
 
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
   :root {
@@ -41,6 +43,9 @@
   }
 
 
+a {
+  color: inherit;
+}
 
 
   .logo {
@@ -453,7 +458,43 @@ nav a:hover::after {
 
 </style>
 
+
+
+
+<style>
+  .view-elements {
+  display: flex; /* Utilisation de flexbox pour l'alignement */
+  justify-content: space-between; /* Espace entre le titre et le lien */
+  align-items: center; /* Centrer verticalement le titre et le lien */
+}
+
+/* --- Media Query pour mobile --- */
+@media (max-width: 480px) {
+  .view-elements {
+    flex-direction: column; /* Empiler les éléments en colonne sur mobile */
+    align-items: flex-start; /* Aligner les éléments à gauche */
+  }
+
+  .view-all {
+    margin-bottom: 2rem;
+  }
+}
+
+.view-all {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #C2BCD7;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.view-all:hover {
+  text-decoration: underline;
+}
+
 </style>
+
+
 
     <section id="nouveautes" class="max-w-6xl mx-auto px-6 py-12">
       <h2 class="text-3xl font-bold mb-4">Note d’intention</h2>
@@ -463,6 +504,142 @@ Il s’agit d’arpenter la ville, micro en main, pour en extraire des fragments
 <p>Au-delà du simple enregistrement, le projet se veut une cartographie sensible : les sons seront géolocalisés sur une carte interactive, accompagnés, si nécessaire, de courts textes explicatifs, traces d’histoires, indices sociaux, regards sur l’urbanisme et les usages. L’objectif est de permettre au public de voyager par l’oreille, de retrouver ou de découvrir la ville autrement.</p><p>Il ne s’agit pas seulement de documenter, mais aussi de révéler. L’oreille devient outil d’observation, la ville devient matière musicale, et chaque son, même le plus anodin, devient porteur de sens.
 Ce projet souhaite rappeler que l’identité d’une ville ne se lit pas uniquement dans ses pierres ou ses plans, mais aussi dans ses murmures.</p>
     </section>
+
+
+
+<section class="max-w-6xl mx-auto px-6 py-8">
+   <div class="view-elements">
+  <h2 class="text-3xl font-bold mb-6">Collections thématiques</h2>
+  <a href="#" class="view-all">Voir toutes les collections</a>
+</div>
+
+   <div class="tag-section">
+  <div class="tag">
+     <div class="absolute inset-0 hero-overlay"></div>
+    <div class="tag-content">
+      <h2 class="tag-title">Souvenirs d'enfance</h2>
+      <p class="tag-description">Rires d’enfants, musiques mécaniques des carrousels, promesses de barbe à papa : autant de fragments qui réveillent une mémoire intime. Ces sons ne sont pas seulement ceux de la fête, mais des instants suspendus où la ville s’ouvre à la légèreté du jeu et au vertige de l’innocence retrouvée.</p>
+      <a href="">En savoir plus</a>
+    </div>
+  </div>
+  <div class="tag">
+     <div class="absolute inset-0 hero-overlay"></div>
+    <div class="tag-content">
+      <h2 class="tag-title">Chaleur urbaine</h2>
+      <p class="tag-description">Dans l’épaisseur de l’air brûlant, la ville halète. Les moteurs ronronnent comme des bêtes mécaniques, les fontaines se font refuges, les climatiseurs crachent une respiration artificielle. Ici, l’été n’est pas une simple saison : c’est une fièvre qui traverse les murs et qui imprime son tempo étouffant aux rues.</p>
+      <a href="">En savoir plus</a>
+    </div>
+  </div>
+  <div class="tag">
+    <div class="absolute inset-0 hero-overlay"></div>
+    <div class="tag-content">
+      <h2 class="tag-title">Mutation urbaine</h2>
+      <p class="tag-description">Grincements de grues, marteaux sur l’acier, déflagrations sourdes des machines : la ville se reconstruit sans cesse sur elle-même. Ces sons témoignent d’un présent en transformation, entre destruction et élévation. Ils sont les battements d’un organisme en mutation, où chaque coup de marteau annonce une nouvelle forme à venir.</p>
+      <a href="">En savoir plus</a>
+    </div>
+  </div>
+  </div>
+</section>
+
+<style>
+/* Section en grille responsive */
+.tag-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* Carte avec ratio 9:16 */
+.tag {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  border-radius: 12px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+
+
+/* Contenu */
+.tag-content {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  color: #fff;
+  text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.tag-title {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.tag-description {
+  font-size: 0.95rem;
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+.tag a {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 14px;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(4px);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.9rem;
+  transition: background 0.3s ease;
+}
+
+.tag a:hover {
+  background: rgba(255,255,255,0.35);
+}
+
+/* Images */
+.tag:nth-child(1) {
+  background-image: url('img/enfance.webp');
+}
+.tag:nth-child(2) {
+  background-image: url('img/chaleur.webp');
+}
+.tag:nth-child(3) {
+  background-image: url('img/chantier.webp');
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .tag-content {
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+  }
+
+  .tag-title {
+    font-size: 1.1rem;
+  }
+
+  .tag-description {
+    font-size: 0.85rem;
+  }
+
+  .tag:hover {
+    transform: none; /* pas de zoom sur mobile */
+  }
+}
+</style>
+
+
+
+
+
+
+
+
+
 
   <section id="nouveautes" class="max-w-6xl mx-auto px-6 py-6">
 
@@ -519,7 +696,7 @@ async function loadClips() {
   const lines = tsvText.trim().split('\n');
 
   clips = lines.map(line => {
-    const [latStr, lonStr, date, heure, dureeStr, titre, description, lien] = line.split('\t');
+    const [latStr, lonStr, date, heure, dureeStr, titre, description, lien, categories] = line.split('\t');
 
     return {
       lat: parseFloat(latStr.replace(',', '.')),
@@ -532,8 +709,6 @@ async function loadClips() {
       lien: lien.trim()
     };
   });
-
-  console.log(clips); // tu peux l'utiliser directement après ça
 }
 
 // Fonction principale qui attend le chargement
