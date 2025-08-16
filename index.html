@@ -636,7 +636,6 @@ afficherDerniersAudios();
     function initMap() {
       try{
         // create map
-        const useClustering = true; 
         const map = L.map('map', { zoomControl:false, attributionControl:false }).setView([43.6,1.38], 12);
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -646,9 +645,7 @@ afficherDerniersAudios();
 }).addTo(map);
 
 
-         // Si le clustering est activé, créer un groupe de clusters
-      const markers = useClustering ? L.markerClusterGroup() : null;
-
+        const markers = L.markerClusterGroup();
         const audio = document.getElementById('globalAudio');
         let currentId = null;
 
@@ -733,12 +730,7 @@ const m = L.marker([clip.lat, clip.lon], { icon: customIcon });
             }
           });
 
-           // Si le clustering est activé, ajoute les marqueurs au groupe de clusters, sinon ajoute directement à la carte
-      if (useClustering) {
-        markers.addLayer(m);
-      } else {
-        m.addTo(map); // Ajoute directement à la carte sans clustering
-      }
+          markers.addLayer(m);
         });
 
         map.addLayer(markers);
