@@ -636,7 +636,7 @@ afficherDerniersAudios();
     function initMap() {
       try{
         // create map
-        const useClustering = false; 
+        const useClustering = true; 
         const map = L.map('map', { zoomControl:false, attributionControl:false }).setView([43.6,1.38], 12);
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
