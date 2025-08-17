@@ -169,12 +169,12 @@
 <body> 
 
 <div class="site-header">
-  <div class="logo">
+  <a href="index.html" class="logo">
     <div class="brand-mark no-mobile">
       <img src="logo.png" alt="Logo Partition Urbaine" />
     </div>
     <div style="font-weight:700; font-size:1.1rem;">Partition Urbaine</div>
-  </div>
+  </a>
 
   <div class="menu-toggle" onclick="document.querySelector('nav').classList.toggle('active')">
     <span></span>
@@ -183,31 +183,17 @@
   </div>
 
   <nav>
-    <a href="#">Accueil</a>
+    <a href="index.html">Accueil</a>
     <a href="rec.html">Enregistrement</a>
     <a href="#">À propos</a>
   </nav>
 </div>
 
 <main>
-  <!-- Hero -->
-  <section class="relative">
-      <div class="h-[70vh] md:h-[66vh] bg-cover bg-center hero-overlay" style="background-image: url('img/1.webp');">
-        <div class="absolute inset-0 hero-overlay"></div>
-        <div class="relative z-10 max-w-6xl mx-auto px-6 h-full flex items-center">
-          <div class="max-w-2xl">
-            <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">Enregistrer et cartographier la mémoire sonore des rues</h1>
-            <p class="mt-4 text-lg md:text-l subtitle">La ville parle, mais rarement on l’écoute. Ses voix se mêlent, se superposent, se perdent parfois dans le bruit de fond de notre quotidien, elles composent une partition vivante, à la fois banale et unique, qui disparaît souvent sans laisser de trace.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+
 
     <section id="derniers-audios" class="max-w-6xl mx-auto px-6 py-8 mt-3">
-         <div class="view-elements">
-  <h2 class="text-3xl font-bold mb-4">Dernières entrées</h2>
-  <a href="all.html" class="view-all">Voir toutes les entrées</a>
-</div>
+         <h2 class="text-3xl font-bold mb-8">Toutes les captations</h2>
       <div id="latestClips" class="grid grid-cols-1 sm:grid-cols-3 gap-6"></div>
     </section>
 
@@ -216,230 +202,7 @@
 
 
 
-<style>
-  .view-elements {
-  display: flex; /* Utilisation de flexbox pour l'alignement */
-  justify-content: space-between; /* Espace entre le titre et le lien */
-  align-items: center; /* Centrer verticalement le titre et le lien */
-}
-
-/* --- Media Query pour mobile --- */
-@media (max-width: 480px) {
-  .view-elements {
-    flex-direction: column; /* Empiler les éléments en colonne sur mobile */
-    align-items: flex-start; /* Aligner les éléments à gauche */
-  }
-
-  .view-all {
-    margin-bottom: 2rem;
-  }
-}
-
-.view-all {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: #C2BCD7;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.view-all:hover {
-  text-decoration: underline;
-}
-
-</style>
-
-
-
-    <section id="nouveautes" class="max-w-6xl mx-auto px-6 py-12">
-      <h2 class="text-3xl font-bold mb-4">Note d’intention</h2>
-      <p>La ville parle, mais rarement on l’écoute. Ses voix se mêlent, se superposent, se perdent parfois dans le bruit de fond de notre quotidien. Pourtant, ces sons façonnent notre rapport intime aux lieux : le cri du marchand de fruits sur la place du marché, la rumeur douce d’un square un dimanche après-midi, la résonance métallique d’une passerelle de gare. Ils composent une partition vivante, à la fois banale et unique, qui disparaît souvent sans laisser de trace.</p>
-      <p><em>Partition Urbaine</em> est une tentative de capter cette mémoire fugace.
-Il s’agit d’arpenter la ville, micro en main, pour en extraire des fragments d’ambiances, de voix, de rythmes, et les conserver comme on conserverait une archive précieuse. Chaque enregistrement est réalisé in situ, dans un lieu précis, à un moment donné, afin de saisir son identité sonore.</p>
-<p>Au-delà du simple enregistrement, le projet se veut une cartographie sensible : les sons seront géolocalisés sur une carte interactive, accompagnés, si nécessaire, de courts textes explicatifs, traces d’histoires, indices sociaux, regards sur l’urbanisme et les usages. L’objectif est de permettre au public de voyager par l’oreille, de retrouver ou de découvrir la ville autrement.</p><p>Il ne s’agit pas seulement de documenter, mais aussi de révéler. L’oreille devient outil d’observation, la ville devient matière musicale, et chaque son, même le plus anodin, devient porteur de sens.
-Ce projet souhaite rappeler que l’identité d’une ville ne se lit pas uniquement dans ses pierres ou ses plans, mais aussi dans ses murmures.</p>
-    </section>
-
-
-
-<section class="max-w-6xl mx-auto px-6 py-8">
-   <div class="view-elements">
-  <h2 class="text-3xl font-bold mb-4">Collections thématiques</h2>
-  <a href="#" class="view-all">Voir toutes les collections</a>
-</div>
-
-   <div class="tag-section">
-  <div class="tag">
-     <div class="absolute inset-0 hero-overlay"></div>
-    <div class="tag-content">
-      <h2 class="tag-title">Souvenirs d'enfance</h2>
-      <p class="tag-description">Rires d’enfants, musiques mécaniques des carrousels, promesses de barbe à papa : autant de fragments qui réveillent une mémoire intime. Ces sons ne sont pas seulement ceux de la fête, mais des instants suspendus où la ville s’ouvre à la légèreté du jeu et au vertige de l’innocence retrouvée.</p>
-      <a href="">En savoir plus</a>
-    </div>
-  </div>
-  <div class="tag">
-     <div class="absolute inset-0 hero-overlay"></div>
-    <div class="tag-content">
-      <h2 class="tag-title">Chaleur urbaine</h2>
-      <p class="tag-description">Dans l’épaisseur de l’air brûlant, la ville halète. Les moteurs ronronnent comme des bêtes mécaniques, les fontaines se font refuges, les climatiseurs crachent une respiration artificielle. Ici, l’été n’est pas une simple saison : c’est une fièvre qui traverse les murs et qui imprime son tempo étouffant aux rues.</p>
-      <a href="">En savoir plus</a>
-    </div>
-  </div>
-  <div class="tag">
-    <div class="absolute inset-0 hero-overlay"></div>
-    <div class="tag-content">
-      <h2 class="tag-title">Mutation urbaine</h2>
-      <p class="tag-description">Grincements de grues, marteaux sur l’acier, déflagrations sourdes des machines : la ville se reconstruit sans cesse sur elle-même. Ces sons témoignent d’un présent en transformation, entre destruction et élévation. Ils sont les battements d’un organisme en mutation, où chaque coup de marteau annonce une nouvelle forme à venir.</p>
-      <a href="">En savoir plus</a>
-    </div>
-  </div>
-  </div>
-</section>
-
-<style>
-/* Section en grille responsive */
-.tag-section {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-}
-
-/* Carte avec ratio 9:16 */
-.tag {
-  position: relative;
-  aspect-ratio: 9 / 16;
-  border-radius: 12px;
-  overflow: hidden;
-  background-size: cover;
-  background-position: center;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-}
-
-
-
-/* Contenu */
-.tag-content {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  right: 20px;
-  color: #fff;
-  text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-}
-
-.tag-title {
-  font-size: 1.25rem;
-  margin: 0;
-}
-
-.tag-description {
-  font-size: 0.95rem;
-  margin-top: 8px;
-  line-height: 1.4;
-}
-
-.tag a {
-  display: inline-block;
-  margin-top: 12px;
-  padding: 8px 14px;
-  background: rgba(255,255,255,0.2);
-  backdrop-filter: blur(4px);
-  border-radius: 8px;
-  color: #fff;
-  font-size: 0.9rem;
-  transition: background 0.3s ease;
-}
-
-.tag a:hover {
-  background: rgba(255,255,255,0.35);
-}
-
-/* Images */
-.tag:nth-child(1) {
-  background-image: url('img/enfance.webp');
-}
-.tag:nth-child(2) {
-  background-image: url('img/chaleur.webp');
-}
-.tag:nth-child(3) {
-  background-image: url('img/chantier.webp');
-}
-
-/* --- Responsive --- */
-@media (max-width: 768px) {
-  .tag-content {
-    bottom: 15px;
-    left: 15px;
-    right: 15px;
-  }
-
-  .tag-title {
-    font-size: 1.1rem;
-  }
-
-  .tag-description {
-    font-size: 0.85rem;
-  }
-
-  .tag:hover {
-    transform: none; /* pas de zoom sur mobile */
-  }
-}
-</style>
-
-
-
-
-
-
-
-
-
-
-  <section id="nouveautes" class="max-w-6xl mx-auto px-6 py-6">
-
-    <h2 class="text-3xl font-bold mb-4">Carte sonore</h2>
-
-    <p class="lead">Cliquez sur les marqueurs pour écouter une captation. Utilisez la liste pour naviguer et contrôler la lecture. Les fichiers proviennent d'un tableau JavaScript et la carte est entièrement responsive.</p>
-
-    <div class="layout">
-      <div>
-        <div id="map" aria-label="Carte des captations sonores"></div>
-      </div>
-
-      <aside>
-        <div class="search">
-          <input id="search" placeholder="Rechercher un titre ou une date..." />
-        </div>
-        <div class="clip" id="clipsList" aria-live="polite">
-          <!-- items injected here -->
-        </div>
-      </aside>
-    </div>
-  </div>
-
-  <!-- Mobile sticky player -->
-  <div class="mobile-player" id="mobilePlayer" style="display:none; z-index: 1000;">
-    <div style="width:48px;height:48px;border-radius:6px;background:#f2f2f2;display:grid;place-items:center">♫</div>
-    <div class="info">
-      <div id="mp-title" style="font-weight:700">Titre</div>
-      <div id="mp-meta" style="font-size:0.85rem;color:#666">00:00 — 0.0s</div>
-    </div>
-    <div>
-      <button id="mp-play" class="btn">Play</button>
-    </div>
-  </section>
-
-  <!-- Audio element used globally -->
-  <audio id="globalAudio" crossorigin="anonymous"></audio>
-
-  <!-- Load Leaflet & MarkerCluster dynamically to avoid "L is not defined" errors -->
-  <script>
-    
-
-
-
-
+<script>
 const sheetUrl = 'https://corsproxy.io/?https://docs.google.com/spreadsheets/d/16LhO82rFlzNwrnF6B64rKK91_Q7o0Cc9VhhuuJLu9eY/export?format=tsv&id=16LhO82rFlzNwrnF6B64rKK91_Q7o0Cc9VhhuuJLu9eY&gid=0';
 
 let clips = [];
@@ -473,12 +236,14 @@ async function main() {
   await loadClips(); // Attend que clips2 soit rempli
 
   function afficherDerniersAudios() {
+
   // On trie par date (puis heure) du plus récent au plus ancien
-  const derniers = [...clips].sort((a, b) => {
-    const da = new Date(a.date.split('/').reverse().join('-') + 'T' + (a.heure || '00:00'));
-    const db = new Date(b.date.split('/').reverse().join('-') + 'T' + (b.heure || '00:00'));
-    return db - da;
-  }).slice(0, 3);
+const derniers = [...clips].sort((a, b) => {
+  const da = new Date(a.date.split('/').reverse().join('-') + 'T' + (a.heure || '00:00'));
+  const db = new Date(b.date.split('/').reverse().join('-') + 'T' + (b.heure || '00:00'));
+  return db - da;
+});
+
 
   const container = document.getElementById('latestClips');
   container.innerHTML = '';
@@ -495,11 +260,10 @@ card.className = 'clip-card';
 const itemEnfance = collections.find(item => item.id === clip.categories[0]);
 // Récupérer le lien
 const lienEnfance = itemEnfance ? itemEnfance.lien : null;
-if(lienEnfance){
+if(lienEnfance) {
   card.style.backgroundImage = `url(${lienEnfance})`;
+
 }
-
-
       console.log(clip.categories[0], styleAdd);
     }
 
@@ -760,7 +524,6 @@ const m = L.marker([clip.lat, clip.lon], { icon: customIcon });
         function escapeAttr(s){ return s ? s.replace(/"/g, '&quot;') : ''; }
 
       }catch(err){
-        showFatalError('Erreur d\'initialisation de la carte', err && err.message ? err.message : err);
       }
     }
 }
