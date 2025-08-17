@@ -32,6 +32,10 @@
 a {
   color: inherit;
 }
+.lien {
+  color: inherit;
+  text-decoration: underline;
+}
 
 
   .logo {
@@ -234,3 +238,93 @@ background-position: center;
     position: relative;
     z-index: 1;
   }
+
+
+
+
+
+
+
+
+
+
+
+  /* Section en grille responsive */
+.tag-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+/* Carte avec ratio 9:16 */
+.tag {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  border-radius: 12px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+
+
+/* Contenu */
+.tag-content {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  color: #fff;
+  text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.tag-title {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.tag-description {
+  font-size: 0.95rem;
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+.tag a {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 14px;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(4px);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.9rem;
+  transition: background 0.3s ease;
+}
+
+.tag a:hover {
+  background: rgba(255,255,255,0.35);
+}
+
+
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .tag-content {
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+  }
+
+  .tag-title {
+    font-size: 1.1rem;
+  }
+
+  .tag-description {
+    font-size: 0.85rem;
+  }
+
+  .tag:hover {
+    transform: none; /* pas de zoom sur mobile */
+  }
+}

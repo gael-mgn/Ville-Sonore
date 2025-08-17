@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
 
   <link rel="icon" href="logo.png" type="image/x-icon">
-  
+
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet">
 
   <!-- Tailwind via CDN -->
@@ -62,8 +62,11 @@
   </section>
 
   <section id="derniers-audios" class="max-w-6xl mx-auto px-6 py-8 mt-3">
-    <h2 class="text-3xl font-bold mb-8">Sonothèque</h2>
-    <div id="latestClips" class="grid grid-cols-1 sm:grid-cols-3 gap-6"></div>
+    <h2 class="text-3xl font-bold mb-4">Sonothèque</h2>
+
+    <p class="justify">La sonothèque rassemble l’ensemble des enregistrements du projet, comme une archive vivante des murmures urbains. Chaque fragment sonore peut être exploré librement, au-delà de son lieu d’origine. Pour guider l’écoute, certains sons sont regroupés en <a href="collections.html" class="lien">collections thématiques</a> que vous pouvez retrouver en intégralité <a href="collections.html" class="lien">ici</a>.</p>
+
+    <div id="latestClips" class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6"></div>
   </section>
 
   <!-- Audio element -->
@@ -113,7 +116,7 @@ async function main() {
 
       if (clip.categories.length > 0){
         const item = collections.find(item => item.id === clip.categories[0]);
-        const lienImg = item ? item.lien : null;
+        const lienImg = item ? item.image : null;
         if(lienImg) card.style.backgroundImage = `url(${lienImg})`;
       }
 

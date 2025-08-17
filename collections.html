@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Partition Urbaine — Collections thématiques</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="icon" href="logo.png" type="image/x-icon">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="js/collections.js"></script>
+  <script src="js/script.js"></script>
+
+  <link rel="stylesheet" href="style/main.css">
+</head>
+
+<body> 
+
+<div class="site-header">
+  <a href="index.html" class="logo">
+    <div class="brand-mark no-mobile">
+      <img src="logo.png" alt="Logo Partition Urbaine" />
+    </div>
+    <div style="font-weight:700; font-size:1.1rem;">Partition Urbaine</div>
+  </a>
+
+  <div class="menu-toggle" onclick="document.querySelector('nav').classList.toggle('active')">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="sonotheque.html">Sonothèque</a>
+    <a href="rec.html">Contribuer</a>
+    <a href="#">À propos</a>
+  </nav>
+</div>
+
+<main>
+  <!-- Hero -->
+  <section class="relative">
+      <div class="h-[70vh] md:h-[66vh] bg-cover bg-center hero-overlay" style="background-image: url('img/sonotheque.webp');">
+        <div class="absolute inset-0 hero-overlay"></div>
+        <div class="relative z-10 max-w-6xl mx-auto px-6 h-full flex items-center">
+          <div class="max-w-2xl">
+            <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">Collections thématiques</h1>
+            <p class="mt-4 text-lg md:text-l subtitle">Les collections thématiques offrent une autre manière d’écouter la ville. Elles rassemblent des sons par atmosphères ou par imaginaires communs : la chaleur écrasante d’un été, l’énergie des artistes de rue, le vacarme des urgences, les échos des souvenirs d’enfance ou encore les métamorphoses des chantiers. Autant de parcours sensibles pour voyager à travers la mémoire sonore urbaine.</p>
+          </div>
+        </div>
+      </div>
+  </section>
+
+
+<section class="max-w-6xl mx-auto px-6 py-8">
+  <h2 class="text-3xl font-bold mb-8">Collections thématiques</h2>
+
+<script>
+
+    // Fonction pour générer le HTML
+    function generateTags(collections) {
+        const tagSection = document.getElementById('tag-section');
+        
+        collections.forEach(item => {
+            const tag = document.createElement('div');
+            tag.classList.add('tag');
+            tag.id = item.id;
+
+            tag.style.backgroundImage = `url('${item.image}')`;
+
+            const overlay = document.createElement('div');
+            overlay.classList.add('absolute', 'inset-0', 'hero-overlay');
+            tag.appendChild(overlay);
+
+            const tagContent = document.createElement('div');
+            tagContent.classList.add('tag-content');
+
+            const title = document.createElement('h2');
+            title.classList.add('tag-title');
+            title.textContent = item.titre;
+            tagContent.appendChild(title);
+
+            const description = document.createElement('p');
+            description.classList.add('tag-description');
+            description.textContent = item.description || 'Description non disponible.';
+            tagContent.appendChild(description);
+
+            const link = document.createElement('a');
+            link.href = item.lien;
+            link.textContent = 'En savoir plus';
+            tagContent.appendChild(link);
+
+            tag.appendChild(tagContent);
+            tagSection.appendChild(tag);
+        });
+    }
+
+    // Appel de la fonction pour générer les tags
+    document.addEventListener("DOMContentLoaded", function () {
+    // Votre code ici, qui dépend de la disponibilité du DOM
+    generateTags(collections);  // Assurez-vous que `generateTags` est appelé après le chargement complet du DOM
+  });
+</script>
+
+
+<div class="tag-section" id="tag-section"></div>
+
+
+
+</section>
+</main>
+
+<footer class="bg-[#1e1f23] text-gray-300 mt-16">
+  <div class="max-w-6xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-10">
+    
+    <!-- Colonne 1 -->
+    <div>
+      <h3 class="text-lg font-bold mb-4 text-white">Partition Urbaine</h3>
+      <p class="text-sm leading-relaxed">
+        La ville parle, mais rarement on l’écoute...
+      </p>
+    </div>
+
+    <!-- Colonne 2 -->
+    <div>
+      <h3 class="text-lg font-bold mb-4 text-white">Navigation</h3>
+      <ul class="space-y-2 text-sm">
+        <li><a href="index.html" class="hover:text-white">Accueil</a></li>
+        <li><a href="sonotheque.html" class="hover:text-white">Sonothèque</a></li>
+        <li><a href="rec.html" class="hover:text-white">Contribuer</a></li>
+        <li><a href="#" class="hover:text-white">À propos</a></li>
+      </ul>
+    </div>
+
+    <!-- Colonne 3 -->
+    <div>
+      <h3 class="text-lg font-bold mb-4 text-white">Contact</h3>
+      <ul class="space-y-2 text-sm">
+        <li>Email : <a href="mailto:contact@gael-maignan.fr" class="hover:text-white">contact@gael-maignan.fr</a></li>
+        <li>Site : <a href="https://gael-maignan.fr" class="hover:text-white" target="_blank">https://gael-maignan.fr</a></li>
+        <li>LinkedIn : <a href="https://www.linkedin.com/in/gael-maignan/" class="hover:text-white" target="_blank">Gaël Maignan</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-gray-700 text-center text-sm py-4">
+    © <span id="currentYear"></span> Partition Urbaine — Tous droits réservés
+  </div>
+
+  <script>
+    // Obtenir l'année actuelle
+    const currentYear = new Date().getFullYear();
+    
+    // Afficher l'année dans le span avec l'id "currentYear"
+    document.getElementById("currentYear").textContent = currentYear;
+  </script>
+</footer>
+
+</body>
+</html>

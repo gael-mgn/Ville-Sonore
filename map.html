@@ -25,6 +25,11 @@
 
   <link rel="stylesheet" href="style/main.css">
 
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const tag = urlParams.get('tag');
+  </script>
+
   <style>
     .layout {
       display: grid;
@@ -194,7 +199,7 @@
 <body> 
 
 <div class="site-header">
-  <a href="#" class="logo">
+  <a href="index.html" class="logo">
     <div class="brand-mark no-mobile">
       <img src="logo.png" alt="Logo Partition Urbaine" />
     </div>
@@ -208,7 +213,7 @@
   </div>
 
   <nav>
-    <a href="#">Accueil</a>
+    <a href="index.html">Accueil</a>
      <a href="sonotheque.html">Sonothèque</a>
     <a href="rec.html">Contribuer</a>
     <a href="#">À propos</a>
@@ -218,16 +223,30 @@
 <main>
   <!-- Hero -->
   <section class="relative">
-      <div class="h-[70vh] md:h-[66vh] bg-cover bg-center hero-overlay" style="background-image: url('img/1.webp');">
-        <div class="absolute inset-0 hero-overlay"></div>
-        <div class="relative z-10 max-w-6xl mx-auto px-6 h-full flex items-center">
-          <div class="max-w-2xl">
-            <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">Enregistrer et cartographier la mémoire sonore des rues</h1>
-            <p class="mt-4 text-lg md:text-l subtitle">La ville parle, mais rarement on l’écoute. Ses voix se mêlent, se superposent, se perdent parfois dans le bruit de fond de notre quotidien, elles composent une partition vivante, à la fois banale et unique, qui disparaît souvent sans laisser de trace.</p>
-          </div>
-        </div>
+  <div class="h-[70vh] md:h-[66vh] bg-cover bg-center hero-overlay" id="hero-bg">
+    <div class="absolute inset-0 hero-overlay"></div>
+    <div class="relative z-10 max-w-6xl mx-auto px-6 h-full flex items-center">
+      <div class="max-w-2xl">
+        <h1 id="collection-title" class="text-3xl md:text-5xl font-extrabold leading-tight"></h1>
+        <p id="collection-description" class="mt-4 text-lg md:text-l subtitle"></p>
       </div>
-  </section>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Trouver la collection correspondante dans le tableau
+const collection = collections.find(c => c.id === tag);
+
+// Mettre à jour les éléments HTML avec le titre et la description de la collection
+if (collection) {
+  document.getElementById('collection-title').innerText = collection.titre;
+  document.getElementById('collection-description').innerText = collection.description;
+  document.getElementById('hero-bg').style.backgroundImage = `url('${collection.image}')`;
+} else {
+  console.log("Collection non trouvée pour l'ID:", tag);
+}
+</script>
 
     <section id="derniers-audios" class="max-w-6xl mx-auto px-6 py-8 mt-3">
          <div class="view-elements">
@@ -274,83 +293,6 @@
 }
 
 </style>
-
-
-
-    <section id="nouveautes" class="max-w-6xl mx-auto px-6 py-12 justify">
-      <h2 class="text-3xl font-bold mb-4">Note d’intention</h2>
-      <p>La ville parle, mais rarement on l’écoute. Ses voix se mêlent, se superposent, se perdent parfois dans le bruit de fond de notre quotidien. Pourtant, ces sons façonnent notre rapport intime aux lieux : le cri du marchand de fruits sur la place du marché, la rumeur douce d’un square un dimanche après-midi, la résonance métallique d’une passerelle de gare. Ils composent une partition vivante, à la fois banale et unique, qui disparaît souvent sans laisser de trace.</p>
-      <p><em>Partition Urbaine</em> est une tentative de capter cette mémoire fugace.
-Il s’agit d’arpenter la ville, micro en main, pour en extraire des fragments d’ambiances, de voix, de rythmes, et les conserver comme on conserverait une archive précieuse. Chaque enregistrement est réalisé in situ, dans un lieu précis, à un moment donné, afin de saisir son identité sonore.</p>
-<p>Au-delà du simple enregistrement, le projet se veut une cartographie sensible : les sons seront géolocalisés sur une carte interactive, accompagnés, si nécessaire, de courts textes explicatifs, traces d’histoires, indices sociaux, regards sur l’urbanisme et les usages. L’objectif est de permettre au public de voyager par l’oreille, de retrouver ou de découvrir la ville autrement.</p><p>Il ne s’agit pas seulement de documenter, mais aussi de révéler. L’oreille devient outil d’observation, la ville devient matière musicale, et chaque son, même le plus anodin, devient porteur de sens.
-Ce projet souhaite rappeler que l’identité d’une ville ne se lit pas uniquement dans ses pierres ou ses plans, mais aussi dans ses murmures.</p>
-    </section>
-
-
-
-<section class="max-w-6xl mx-auto px-6 py-8">
-   <div class="view-elements">
-  <h2 class="text-3xl font-bold mb-4">Collections thématiques</h2>
-  <a href="collections.html" class="view-all">Voir toutes les collections</a>
-</div>
-
-
-
-<div class="tag-section" id="tag-section"></div>
-<script>
-
-    // Fonction pour générer le HTML
-    function generateTags(collections) {
-        const tagSection = document.getElementById('tag-section');
-        
-        collections.forEach(item => {
-            const tag = document.createElement('div');
-            tag.classList.add('tag');
-            tag.id = item.id;
-
-            tag.style.backgroundImage = `url('${item.image}')`;
-
-            const overlay = document.createElement('div');
-            overlay.classList.add('absolute', 'inset-0', 'hero-overlay');
-            tag.appendChild(overlay);
-
-            const tagContent = document.createElement('div');
-            tagContent.classList.add('tag-content');
-
-            const title = document.createElement('h2');
-            title.classList.add('tag-title');
-            title.textContent = item.titre;
-            tagContent.appendChild(title);
-
-            const description = document.createElement('p');
-            description.classList.add('tag-description');
-            description.textContent = item.description || 'Description non disponible.';
-            tagContent.appendChild(description);
-
-            const link = document.createElement('a');
-            link.href = item.lien;
-            link.textContent = 'En savoir plus';
-            tagContent.appendChild(link);
-
-            tag.appendChild(tagContent);
-            tagSection.appendChild(tag);
-        });
-    }
-
-    // Appel de la fonction pour générer les tags
-    //generateTags(collections);
-</script>
-
-
-</section>
-
-
-
-
-
-
-
-
 
 
 
@@ -413,16 +355,19 @@ async function loadClips() {
 
     return {
       lat: latStr && typeof latStr === 'string' ? parseFloat(latStr.replace(',', '.')) : NaN,
-lon: lonStr && typeof lonStr === 'string' ? parseFloat(lonStr.replace(',', '.')) : NaN,
+      lon: lonStr && typeof lonStr === 'string' ? parseFloat(lonStr.replace(',', '.')) : NaN,
       date: (date && typeof date === 'string') ? date.trim() : '',
-heure: (heure && typeof heure === 'string') ? heure.trim() : '',
-duree: parseFloat(dureeStr),
-titre: (titre && typeof titre === 'string') ? titre.trim() : '',
-description: (description && typeof description === 'string') ? description.trim() : '',
-lien: (lien && typeof lien === 'string') ? lien.trim() : '',
-categories: (categories && typeof categories === 'string') ? stringToArray(categories.trim()) : []
+      heure: (heure && typeof heure === 'string') ? heure.trim() : '',
+      duree: parseFloat(dureeStr),
+      titre: (titre && typeof titre === 'string') ? titre.trim() : '',
+      description: (description && typeof description === 'string') ? description.trim() : '',
+      lien: (lien && typeof lien === 'string') ? lien.trim() : '',
+      categories: (categories && typeof categories === 'string') ? stringToArray(categories.trim()) : []
     };
   });
+
+  // ✅ Filtrer ici pour ne garder que les sons en "musique urbaine"
+  clips = clips.filter(c => c.categories.some(cat => cat.toLowerCase() === tag));
 }
 
 // Fonction principale qui attend le chargement
@@ -622,11 +567,6 @@ function getUniqueCategories(clips) {
         }
 
         clips.reverse();
-        // Appel de la fonction
-const categories = getUniqueCategories(clips);
-const filteredCollections = collections.filter(item => categories.includes(item.id));
-generateTags(filteredCollections);
-
 
         // add markers
         clips.forEach((clip, idx)=>{
@@ -772,7 +712,7 @@ main();
     <div>
       <h3 class="text-lg font-bold mb-4 text-white">Navigation</h3>
       <ul class="space-y-2 text-sm">
-        <li><a href="#" class="hover:text-white">Accueil</a></li>
+        <li><a href="index.html" class="hover:text-white">Accueil</a></li>
         <li><a href="sonotheque.html" class="hover:text-white">Sonothèque</a></li>
         <li><a href="rec.html" class="hover:text-white">Contribuer</a></li>
         <li><a href="#" class="hover:text-white">À propos</a></li>

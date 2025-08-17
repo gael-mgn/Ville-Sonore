@@ -1,9 +1,15 @@
-const collections = [
-  { id: 'souvenirs-enfance', titre: 'Souvenirs d enfance', lien: 'img/enfance.webp' },
-  { id: 'chaleur-urbaine', titre: 'Chaleur urbaine', lien: 'img/chaleur.webp' },
-  { id: 'nuit', titre: 'Image 3', lien: 'img/nuit.webp' },
-  { id: 'musique-urbaine', titre: 'Image 3', lien: 'img/musique.webp' },
-  { id: 'marche', titre: 'Image 3', lien: 'img/marche.webp' },
-  { id: 'nuisances-urgences', titre: 'Image 3', lien: 'img/nuisances-urgences.webp' },
-  { id: 'gare', titre: 'Image 3', lien: 'img/gare.webp' }
+let collections = [
+  { id: 'souvenirs-enfance', titre: 'Souvenirs d’enfance', lien:"", image: 'img/enfance.webp', description: 'Rires d’enfants, musiques mécaniques des carrousels, promesses de barbe à papa : autant de fragments qui réveillent une mémoire intime. Ces sons ne sont pas seulement ceux de la fête, mais des instants suspendus où la ville s’ouvre à la légèreté du jeu et au vertige de l’innocence retrouvée.' },
+  { id: 'chaleur-urbaine', titre: 'Chaleur urbaine', lien:"", image: 'img/chaleur.webp', description:'Dans l’épaisseur de l’air brûlant, la ville halète. Les moteurs ronronnent comme des bêtes mécaniques, les fontaines se font refuges, les climatiseurs crachent une respiration artificielle. Ici, l’été n’est pas une simple saison : c’est une fièvre qui traverse les murs et qui imprime son tempo étouffant aux rues.' },
+  { id: 'nuit', titre: 'La ville nocturne', lien:"", image: 'img/nuit.webp', description: 'Quand le jour se retire, une autre partition s’élève. Cris de fêtes et éclats de musique se mêlent au chant discret des animaux urbains, au battement d’ailes et aux bruissements invisibles. La nuit dévoile une ville intime, traversée de contrastes, entre ivresse humaine et présence animale.' },
+  { id: 'musique-urbaine', titre: 'Scènes à ciel ouvert', lien:"", image: 'img/musique.webp', description: 'Au détour d’un carrefour, un violon s’élève contre le vacarme des moteurs. Un accordéon dialogue avec le pas pressé des passants. Les trottoirs deviennent des théâtres éphémères, où chaque note s’évapore mais laisse une trace invisible. La ville chante à travers ceux qui l’habitent et l’inventent.' },
+  { id: 'marche', titre: 'Marchés en effervescence', lien:"", image: 'img/marche.webp', description: 'Sous les halles et sur les places, les voix se chevauchent, les étals craquent, les balances tintent. Chaque marché compose une polyphonie où se croisent les appels des vendeurs, les pas pressés, les sacs qui s’entrechoquent. Ici, la ville s’exprime dans ses échanges, ses gestes quotidiens et ses saveurs en devenir.' },
+  { id: 'nuisances-urgences', titre: 'La rumeur des urgences', image: 'img/nuisances-urgences.webp', description: 'Sirènes, marteaux-piqueurs, klaxons impatients : la ville crie, interpelle, gronde. Ses excès sonores composent une cacophonie familière, à la fois insupportable et constitutive de son identité. Dans ce vacarme brutal, on entend la pulsation d’une modernité pressée, toujours au bord de l’éclat.' },
+  { id: 'transit', titre: 'Instants en transit', image: 'img/transit.webp', description:'Dans les gares et les aéroports, aux arrêts de bus ou dans les couloirs de métro, les sons ne s’attardent jamais. Annonces mécaniques, roulements de valises, souffles de portes automatiques : tout évoque l’attente, le départ ou le retour. Ces lieux transitoires bruissent d’un mouvement perpétuel, comme une respiration entre deux mondes.' },
+  { id: 'mutation-urbaine', titre: 'Mutation urbaine', image: 'img/chantier.webp', description:'Grincements de grues, marteaux sur l’acier, déflagrations sourdes des machines : la ville se reconstruit sans cesse sur elle-même. Ces sons témoignent d’un présent en transformation, entre destruction et élévation. Ils sont les battements d’un organisme en mutation, où chaque coup de marteau annonce une nouvelle forme à venir.' }
 ];
+
+// Ajout du lien pour chaque collection
+collections.forEach(collection => {
+  collection.lien = `map.html?tag=${collection.id}`;
+});
