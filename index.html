@@ -17,351 +17,159 @@
 
   <!-- Tailwind via CDN pour prototype rapide -->
   <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="js/collections.js"></script>
   <script src="js/script.js"></script>
 
+  <link rel="stylesheet" href="style/main.css">
 
   <style>
-  :root {
-    --rf-red: #762B84;
-    --rf-dark: #0e0f11;
-    --rf-gray: #1b1c1f;
-    --rf-contrast: #ffffff;
-    --accent: #2196f3;
-    --max-width: 1200px;
-    --map-height-desktop: 78vh;
-    --map-height-mobile: 55vh;
-    --font-regular: 'Outfit', sans-serif;
-    --font-semibold: 'Outfit', sans-serif;
-  }
-
-  html, body {
-    height: 100%;
-    margin: 0;
-    font-family: var(--font-regular);
-    background: var(--rf-dark);
-    color: var(--rf-contrast);
-  }
-
-
-a {
-  color: inherit;
-}
-
-
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-
-
-  h1 {
-    font-size: 1.25rem;
-    margin: 0;
-    color: var(--rf-contrast);
-  }
-
-  p.lead {
-    margin: 6px 0 18px;
-    color: #ccc;
-    color: #C2BCD7;
-  }
-      p {
-      padding-top: 0.5em;
-      padding-bottom: 0.5em;
-      color: #C2BCD7;
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 18px;
     }
-    .subtitle {
+
+    #map {
+      width: 100%;
+      height: var(--map-height-desktop);
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+      overflow: hidden;
+    }
+
+    aside {
+      background: rgba(30, 31, 35, 0.9);
+      padding: 14px;
+      border-radius: 12px;
+      height: var(--map-height-desktop);
+      overflow: auto;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    }
+
+    .search {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .search input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #1e1f23;
+      color: var(--rf-contrast);
+    }
+
+    .search button {
+      background: var(--rf-red);
+      color: white;
+      border: none;
+      padding: 10px 12px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .search button:hover {
+      background: #ff333f;
+    }
+
+    .clip {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .clip-card {
+      border-radius: 8px;
+      padding: 10px;
+      border: 1px solid #333;
+      background: linear-gradient(180deg, #1b1c1f, #141517);
+      color: var(--rf-contrast);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .clip-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    .clip-title {
+      font-weight: 700;
       color: white;
     }
 
-  .layout {
-    display: grid;
-    grid-template-columns: 1fr 360px;
-    gap: 18px;
-  }
+    .clip-meta {
+      font-size: 0.85rem;
+      color: #aaa;
+    }
 
-  #map {
-    width: 100%;
-    height: var(--map-height-desktop);
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.4);
-    overflow: hidden;
-  }
+    .clip-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
 
-  aside {
-    background: rgba(30, 31, 35, 0.9);
-    padding: 14px;
-    border-radius: 12px;
-    height: var(--map-height-desktop);
-    overflow: auto;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
-  }
+    .btn {
+      border: none;
 
-  .search {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn:hover {
+      text-decoration: underline;
+    }
 
-  .search input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #444;
-    background: #1e1f23;
-    color: var(--rf-contrast);
-  }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid #555;
+      color: var(--rf-contrast);
+      transition: border 0.2s, color 0.2s;
+    }
+    .btn-secondary:hover {
+      border-color: var(--rf-red);
+      color: var(--rf-red);
+    }
 
-  .search button {
-    background: var(--rf-red);
-    color: white;
-    border: none;
-    padding: 10px 12px;
-    border-radius: 8px;
-    transition: background 0.2s;
-  }
-  .search button:hover {
-    background: #ff333f;
-  }
+    .mobile-player {
+      display: none;
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      background: rgba(30,31,35,0.95);
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      align-items: center;
+      gap: 12px;
+      backdrop-filter: blur(6px);
+    }
 
-  .clip {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+    .mobile-player .info {
+      flex: 1;
+      color: var(--rf-contrast);
+    }
 
-  .clip-card {
-    border-radius: 8px;
-    padding: 10px;
-    border: 1px solid #333;
-    background: linear-gradient(180deg, #1b1c1f, #141517);
-    color: var(--rf-contrast);
-    transition: transform 0.15s, box-shadow 0.15s;
-  }
-  .clip-card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-  }
+    @media (max-width:900px) {
+      .layout { grid-template-columns: 1fr; }
+      aside { height: auto; order: 2; }
+      #map { height: var(--map-height-mobile); }
+      .mobile-player { display: flex; }
+    }
 
-  .clip-title {
-    font-weight: 700;
-    color: white;
-  }
-
-  .clip-meta {
-    font-size: 0.85rem;
-    color: #aaa;
-  }
-
-  .clip-controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 8px;
-  }
-
-  .btn {
-    border: none;
-
-    color: white;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .btn:hover {
-    text-decoration: underline;
-  }
-
-  .btn-secondary {
-    background: transparent;
-    border: 1px solid #555;
-    color: var(--rf-contrast);
-    transition: border 0.2s, color 0.2s;
-  }
-  .btn-secondary:hover {
-    border-color: var(--rf-red);
-    color: var(--rf-red);
-  }
-
-  .mobile-player {
-    display: none;
-    position: fixed;
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
-    background: rgba(30,31,35,0.95);
-    border-radius: 12px;
-    padding: 10px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-    align-items: center;
-    gap: 12px;
-    backdrop-filter: blur(6px);
-  }
-
-  .mobile-player .info {
-    flex: 1;
-    color: var(--rf-contrast);
-  }
-
-  @media (max-width:900px) {
-    .layout { grid-template-columns: 1fr; }
-    aside { height: auto; order: 2; }
-    #map { height: var(--map-height-mobile); }
-    .mobile-player { display: flex; }
-  }
-
-  .leaflet-control-container .leaflet-top.leaflet-left {
-    top: 80px;
-  }
-
-
-
-
-
-
-
-
-
-</style>
+    .leaflet-control-container .leaflet-top.leaflet-left {
+      top: 0px;
+    }
+  </style>
 
 </head>
-<body>
 
-  
-<style>
-:root {
-  --brand-bg: #151221;
-  --brand-text: #D3CDE4;
-  --brand-accent: #762B84;
-}
-
-/* HEADER GLOBAL */
-.site-header {
-  background: var(--brand-bg);
-  color: var(--brand-text);
-  padding: 12px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-family: system-ui, sans-serif;
-  position: relative;
-  z-index: 1000;
-}
-
-/* LOGO */
-.site-header .logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.site-header .brand-mark {
-  width: 42px;
-  height: 42px;
-  border-radius: 6px;
-  display: grid;
-  place-items: center;
-  font-weight: 700;
-  color: white;
-  font-size: 1rem;
-  letter-spacing: 1px;
-}
-
-/* Image logo spécifique */
-.site-header .brand-mark img {
-  width: 42px;
-  height: 42px;
-  border-radius: 6px;
-  object-fit: contain;
-}
-
-/* NAVIGATION */
-nav {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-
-nav a {
-  color: inherit;
-  text-decoration: none;
-  font-weight: 600;
-  position: relative;
-  padding: 4px 0;
-  transition: color 0.25s ease;
-}
-
-nav a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -4px;
-  width: 0%;
-  height: 2px;
-  background: var(--brand-accent);
-  transition: width 0.25s ease;
-}
-
-nav a:hover {
-  color: white;
-}
-
-nav a:hover::after {
-  width: 100%;
-}
-
-/* MENU BURGER */
-.menu-toggle {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  cursor: pointer;
-}
-
-.menu-toggle span {
-  width: 24px;
-  height: 2px;
-  background: var(--brand-text);
-  transition: 0.3s;
-}
-
-/* RESPONSIVE */
-@media (max-width: 700px) {
-  nav {
-    position: absolute;
-    top: 60px;
-    right: 0;
-    background: var(--brand-bg);
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 12px 20px;
-    gap: 16px;
-    transform: translateY(-20px);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s, transform 0.3s;
-    width: 100vw;
-  }
-  nav.active {
-    transform: translateY(0);
-    opacity: 1;
-    pointer-events: auto;
-  }
-  .menu-toggle {
-    display: flex;
-  }
-}
-
-@media (min-width: 768px) {
-  .no-mobile {
-    display: none;
-  }
-}
-</style>
+<body> 
 
 <div class="site-header">
   <div class="logo">
-    <!-- Remplace "logo.png" par le chemin réel de ton logo -->
     <div class="brand-mark no-mobile">
       <img src="logo.png" alt="Logo Partition Urbaine" />
     </div>
@@ -381,20 +189,8 @@ nav a:hover::after {
   </nav>
 </div>
 
-
-
-<style>
-  .hero-overlay { background: linear-gradient(180deg, rgba(15,23,42,0.45), rgba(15,23,42,0.65)); }
-
-</style>
-
-  <main>
-  <!-- Nouveau header -->
-
-
-
-
-
+<main>
+  <!-- Hero -->
   <section class="relative">
       <div class="h-[70vh] md:h-[66vh] bg-cover bg-center hero-overlay" style="background-image: url('img/1.webp');">
         <div class="absolute inset-0 hero-overlay"></div>
@@ -402,61 +198,20 @@ nav a:hover::after {
           <div class="max-w-2xl">
             <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">Enregistrer et cartographier la mémoire sonore des rues</h1>
             <p class="mt-4 text-lg md:text-l subtitle">La ville parle, mais rarement on l’écoute. Ses voix se mêlent, se superposent, se perdent parfois dans le bruit de fond de notre quotidien, elles composent une partition vivante, à la fois banale et unique, qui disparaît souvent sans laisser de trace.</p>
-            <!--<div class="mt-6 flex gap-3">
-              <a href="submit.html" class="px-5 py-3" id="submit">Soumettre un manuscrit</a>
-            </div>-->
           </div>
         </div>
       </div>
     </section>
 
     <section id="derniers-audios" class="max-w-6xl mx-auto px-6 py-8 mt-3">
-  <h2 class="text-3xl font-bold mb-7">Dernières entrées</h2>
-  <div id="latestClips" class="grid grid-cols-1 sm:grid-cols-3 gap-6"></div>
-</section>
-
-<style>
-  /* Image de fond pour la section des derniers sons */
-
-
-
-      #latestClips .clip-card {
-      position: relative;
-      overflow: hidden;
-      background-image: url('img/3.webp');
-      background-size: cover;
-      background-position: center;
-      border: 1px solid var(--ring);
-      border-radius: 16px;
-      padding: 18px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-      color: white;
-    }
-
-    #latestClips .clip-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 16px;
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.45), rgba(15, 23, 42, 0.65));
-      z-index: 0;
-    }
-
-    #latestClips .clip-card > * {
-      position: relative;
-      z-index: 1;
-    }
+         <div class="view-elements">
+  <h2 class="text-3xl font-bold mb-4">Dernières entrées</h2>
+  <a href="#" class="view-all">Voir toutes les entrées</a>
+</div>
+      <div id="latestClips" class="grid grid-cols-1 sm:grid-cols-3 gap-6"></div>
+    </section>
 
 
-/*
-  .clip-card {
-    background: url('img/1.webp') center/cover no-repeat;
-    border-radius: 12px;
-    padding: 2rem;
-  }*/
-
-
-</style>
 
 
 
@@ -509,7 +264,7 @@ Ce projet souhaite rappeler que l’identité d’une ville ne se lit pas unique
 
 <section class="max-w-6xl mx-auto px-6 py-8">
    <div class="view-elements">
-  <h2 class="text-3xl font-bold mb-6">Collections thématiques</h2>
+  <h2 class="text-3xl font-bold mb-4">Collections thématiques</h2>
   <a href="#" class="view-all">Voir toutes les collections</a>
 </div>
 
@@ -699,14 +454,15 @@ async function loadClips() {
     const [latStr, lonStr, date, heure, dureeStr, titre, description, lien, categories] = line.split('\t');
 
     return {
-      lat: parseFloat(latStr.replace(',', '.')),
-      lon: parseFloat(lonStr.replace(',', '.')),
-      date: date.trim(),
-      heure: heure.trim(),
-      duree: parseFloat(dureeStr),
-      titre: titre.trim(),
-      description: description.trim(),
-      lien: lien.trim()
+      lat: latStr && typeof latStr === 'string' ? parseFloat(latStr.replace(',', '.')) : NaN,
+lon: lonStr && typeof lonStr === 'string' ? parseFloat(lonStr.replace(',', '.')) : NaN,
+      date: (date && typeof date === 'string') ? date.trim() : '',
+heure: (heure && typeof heure === 'string') ? heure.trim() : '',
+duree: parseFloat(dureeStr),
+titre: (titre && typeof titre === 'string') ? titre.trim() : '',
+description: (description && typeof description === 'string') ? description.trim() : '',
+lien: (lien && typeof lien === 'string') ? lien.trim() : '',
+categories: (categories && typeof categories === 'string') ? stringToArray(categories.trim()) : []
     };
   });
 }
@@ -727,9 +483,24 @@ async function main() {
   const container = document.getElementById('latestClips');
   container.innerHTML = '';
 
+  let styleAdd = "";
   derniers.forEach((clip, idx) => {
+
+    
     const card = document.createElement('div');
-    card.className = 'clip-card';
+card.className = 'clip-card';
+
+    if (clip.categories.length > 0){
+      // Récupérer l'objet avec l'id 'enfance'
+const itemEnfance = collections.find(item => item.id === clip.categories[0]);
+// Récupérer le lien
+const lienEnfance = itemEnfance ? itemEnfance.lien : null;
+card.style.backgroundImage = `url(${lienEnfance})`;
+
+      console.log(clip.categories[0], styleAdd);
+    }
+
+    
     card.innerHTML = `
       <div class="clip-title">${clip.titre}</div>
       <div class="clip-meta">${clip.date} • ${clip.heure} • ${clip.duree}s</div>
@@ -811,7 +582,7 @@ afficherDerniersAudios();
     function initMap() {
       try{
         // create map
-        const map = L.map('map', { zoomControl:false, attributionControl:false }).setView([43.6,1.38], 12);
+        const map = L.map('map', { zoomControl:true, attributionControl:false }).setView([43.6,1.38], 12);
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://www.carto.com/">CARTO</a>',
