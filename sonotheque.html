@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Partition Urbaine — Sonothèque</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="icon" href="logo.png" type="image/x-icon">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="js/collections.js"></script>
+  <script src="js/script.js"></script>
+
+  <link rel="stylesheet" href="style/main.css">
+</head>
+
+<body> 
+
+<div class="site-header">
+  <a href="index.html" class="logo">
+    <div class="brand-mark no-mobile">
+      <img src="logo.png" alt="Logo Partition Urbaine" />
+    </div>
+    <div style="font-weight:700; font-size:1.1rem;">Partition Urbaine</div>
+  </a>
+
+  <div class="menu-toggle" onclick="document.querySelector('nav').classList.toggle('active')">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="#">Sonothèque</a>
+    <a href="rec.html">Contribuer</a>
+    <a href="#">À propos</a>
+  </nav>
+</div>
+
+<main>
+  <!-- Hero -->
+  <section class="relative">
+      <div class="h-[70vh] md:h-[66vh] bg-cover bg-center hero-overlay" style="background-image: url('img/sonotheque.webp');">
+        <div class="absolute inset-0 hero-overlay"></div>
+        <div class="relative z-10 max-w-6xl mx-auto px-6 h-full flex items-center">
+          <div class="max-w-2xl">
+            <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">Sonothèque Urbaine</h1>
+            <p class="mt-4 text-lg md:text-l subtitle">Ici, les sons ne sont plus attachés à un lieu ni à un thème précis : ils s’offrent comme une collection ouverte, une bibliothèque sensible où chaque fragment peut être écouté pour lui-même. La sonothèque est l’archive vivante de la ville, un endroit où ses voix éparses se rencontrent et dialoguent.</p>
+          </div>
+        </div>
+      </div>
+  </section>
+
+  <section id="derniers-audios" class="max-w-6xl mx-auto px-6 py-8 mt-3">
+    <h2 class="text-3xl font-bold mb-8">Sonothèque</h2>
+    <div id="latestClips" class="grid grid-cols-1 sm:grid-cols-3 gap-6"></div>
+  </section>
+
+  <!-- Audio element -->
+  <audio id="globalAudio" crossorigin="anonymous"></audio>
+
+  <script>
+const sheetUrl = 'https://corsproxy.io/?https://docs.google.com/spreadsheets/d/16LhO82rFlzNwrnF6B64rKK91_Q7o0Cc9VhhuuJLu9eY/export?format=tsv&id=16LhO82rFlzNwrnF6B64rKK91_Q7o0Cc9VhhuuJLu9eY&gid=0';
+
+let clips = [];
+
+async function loadClips() {
+  const res = await fetch(sheetUrl);
+  const tsvText = await res.text();
+
+  const lines = tsvText.trim().split('\n');
+
+  clips = lines.map(line => {
+    const [latStr, lonStr, date, heure, dureeStr, titre, description, lien, categories] = line.split('\t');
+    return {
+      date: date?.trim() || '',
+      heure: heure?.trim() || '',
+      duree: parseFloat(dureeStr),
+      titre: titre?.trim() || '',
+      description: description?.trim() || '',
+      lien: lien?.trim() || '',
+      categories: categories ? stringToArray(categories.trim()) : []
+    };
+  });
+}
+
+async function main() {
+  await loadClips();
+
+  function afficherDerniersAudios() {
+    const derniers = [...clips].sort((a, b) => {
+      const da = new Date(a.date.split('/').reverse().join('-') + 'T' + (a.heure || '00:00'));
+      const db = new Date(b.date.split('/').reverse().join('-') + 'T' + (b.heure || '00:00'));
+      return db - da;
+    });
+
+    const container = document.getElementById('latestClips');
+    container.innerHTML = '';
+
+    derniers.forEach((clip) => {
+      const card = document.createElement('div');
+      card.className = 'clip-card';
+
+      if (clip.categories.length > 0){
+        const item = collections.find(item => item.id === clip.categories[0]);
+        const lienImg = item ? item.lien : null;
+        if(lienImg) card.style.backgroundImage = `url(${lienImg})`;
+      }
+
+      card.innerHTML = `
+        <div class="clip-title">${clip.titre}</div>
+        <div class="clip-meta">${clip.date} • ${clip.heure} • ${clip.duree}s</div>
+        <div style="margin-top:8px">${clip.description || ''}</div>
+        <div class="clip-controls mt-3">
+          <button class="btn play-latest" data-url="${normalizedLink(clip.lien)}">▶ Écouter</button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+
+    document.querySelectorAll('.play-latest').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const audio = document.getElementById('globalAudio');
+        audio.src = btn.dataset.url;
+        audio.play();
+      });
+    });
+  }
+
+  afficherDerniersAudios();
+}
+
+function normalizedLink(url){
+  if(!url) return url;
+  if(url.includes('uc?export=download')) return url;
+  const m = url.match(/\/d\/([a-zA-Z0-9_-]+)(?:\/|$)/);
+  if(m && m[1]) return `https://corsproxy.io/?https://drive.google.com/uc?export=download&id=${m[1]}`;
+  return url;
+}
+
+main();
+  </script>
+</main>
+
+<footer class="bg-[#1e1f23] text-gray-300 mt-16">
+  <div class="max-w-6xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-10">
+    
+    <!-- Colonne 1 -->
+    <div>
+      <h3 class="text-lg font-bold mb-4 text-white">Partition Urbaine</h3>
+      <p class="text-sm leading-relaxed">
+        La Sonothèque Urbaine est une archive vivante de la ville, une bibliothèque sensible où les sons se rencontrent et dialoguent.
+      </p>
+    </div>
+
+    <!-- Colonne 2 -->
+    <div>
+      <h3 class="text-lg font-bold mb-4 text-white">Navigation</h3>
+      <ul class="space-y-2 text-sm">
+        <li><a href="index.html" class="hover:text-white">Accueil</a></li>
+        <li><a href="#" class="hover:text-white">Sonothèque</a></li>
+        <li><a href="rec.html" class="hover:text-white">Contribuer</a></li>
+        <li><a href="#" class="hover:text-white">À propos</a></li>
+      </ul>
+    </div>
+
+    <!-- Colonne 3 -->
+    <div>
+      <h3 class="text-lg font-bold mb-4 text-white">Contact</h3>
+      <ul class="space-y-2 text-sm">
+        <li>Email : <a href="mailto:contact@gael-maignan.fr" class="hover:text-white">contact@gael-maignan.fr</a></li>
+        <li>Site : <a href="https://gael-maignan.fr" class="hover:text-white" target="_blank">https://gael-maignan.fr</a></li>
+        <li>LinkedIn : <a href="https://www.linkedin.com/in/gael-maignan/" class="hover:text-white" target="_blank">Gaël Maignan</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-gray-700 text-center text-sm py-4">
+    © <span id="currentYear"></span> Partition Urbaine — Tous droits réservés
+  </div>
+
+  <script>
+    // Obtenir l'année actuelle
+    const currentYear = new Date().getFullYear();
+    
+    // Afficher l'année dans le span avec l'id "currentYear"
+    document.getElementById("currentYear").textContent = currentYear;
+  </script>
+</footer>
+
+</body>
+</html>

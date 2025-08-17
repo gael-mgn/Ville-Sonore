@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 
+  <link rel="icon" href="logo.png" type="image/x-icon">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -79,6 +81,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+
     }
 
     .clip-card {
@@ -152,9 +155,31 @@
       color: var(--rf-contrast);
     }
 
+
+      /* Personnalisation de la barre de défilement */
+  aside::-webkit-scrollbar {
+    width: 12px; /* Largeur de la barre de défilement verticale */
+    height: 12px; /* Hauteur de la barre de défilement horizontale */
+  }
+
+  aside::-webkit-scrollbar-thumb {
+    background-color: #555; /* Couleur de la partie glissante (le "thumb") */
+    border-radius: 6px; /* Bord arrondi pour le "thumb" */
+  }
+
+  aside::-webkit-scrollbar-track {
+    background-color: #333; /* Couleur de la piste de défilement */
+    border-radius: 6px; /* Bord arrondi pour la piste */
+  }
+
+  /* Optionnel : quand la souris est sur la barre de défilement */
+  aside::-webkit-scrollbar-thumb:hover {
+    background-color: #888; /* Change la couleur du "thumb" au survol */
+  }
+
     @media (max-width:900px) {
       .layout { grid-template-columns: 1fr; }
-      aside { height: auto; order: 2; }
+      /*aside { height: auto; order: 2; }*/
       #map { height: var(--map-height-mobile); }
       .mobile-player { display: flex; }
     }
@@ -169,12 +194,12 @@
 <body> 
 
 <div class="site-header">
-  <div class="logo">
+  <a href="#" class="logo">
     <div class="brand-mark no-mobile">
       <img src="logo.png" alt="Logo Partition Urbaine" />
     </div>
     <div style="font-weight:700; font-size:1.1rem;">Partition Urbaine</div>
-  </div>
+  </a>
 
   <div class="menu-toggle" onclick="document.querySelector('nav').classList.toggle('active')">
     <span></span>
@@ -184,7 +209,8 @@
 
   <nav>
     <a href="#">Accueil</a>
-    <a href="rec.html">Enregistrement</a>
+     <a href="sonotheque.html">Sonothèque</a>
+    <a href="rec.html">Contribuer</a>
     <a href="#">À propos</a>
   </nav>
 </div>
@@ -201,12 +227,12 @@
           </div>
         </div>
       </div>
-    </section>
+  </section>
 
     <section id="derniers-audios" class="max-w-6xl mx-auto px-6 py-8 mt-3">
          <div class="view-elements">
   <h2 class="text-3xl font-bold mb-4">Dernières entrées</h2>
-  <a href="all.html" class="view-all">Voir toutes les entrées</a>
+  <a href="sonotheque.html" class="view-all">Voir toutes les entrées</a>
 </div>
       <div id="latestClips" class="grid grid-cols-1 sm:grid-cols-3 gap-6"></div>
     </section>
@@ -251,7 +277,7 @@
 
 
 
-    <section id="nouveautes" class="max-w-6xl mx-auto px-6 py-12">
+    <section id="nouveautes" class="max-w-6xl mx-auto px-6 py-12 justify">
       <h2 class="text-3xl font-bold mb-4">Note d’intention</h2>
       <p>La ville parle, mais rarement on l’écoute. Ses voix se mêlent, se superposent, se perdent parfois dans le bruit de fond de notre quotidien. Pourtant, ces sons façonnent notre rapport intime aux lieux : le cri du marchand de fruits sur la place du marché, la rumeur douce d’un square un dimanche après-midi, la résonance métallique d’une passerelle de gare. Ils composent une partition vivante, à la fois banale et unique, qui disparaît souvent sans laisser de trace.</p>
       <p><em>Partition Urbaine</em> est une tentative de capter cette mémoire fugace.
@@ -400,7 +426,7 @@ Ce projet souhaite rappeler que l’identité d’une ville ne se lit pas unique
 
     <h2 class="text-3xl font-bold mb-4">Carte sonore</h2>
 
-    <p class="lead">Cliquez sur les marqueurs pour écouter une captation. Utilisez la liste pour naviguer et contrôler la lecture. Les fichiers proviennent d'un tableau JavaScript et la carte est entièrement responsive.</p>
+    <p class="lead justify">Cliquez sur les marqueurs pour écouter une captation. Utilisez la liste pour naviguer et contrôler la lecture. Les fichiers proviennent d'un tableau JavaScript et la carte est entièrement responsive.</p>
 
     <div class="layout">
       <div>
@@ -642,6 +668,8 @@ afficherDerniersAudios();
           })
         }
 
+        clips.reverse();
+
         // add markers
         clips.forEach((clip, idx)=>{
           if(typeof clip.lat !== 'number' || typeof clip.lon !== 'number') return;
@@ -770,8 +798,52 @@ main();
 
   </script>
 </main>
-<footer style="padding-top: 100px; padding-bottom: 10px; text-align: center;">
-  Gaël Maignan — Tous droits réservés
+
+<footer class="bg-[#1e1f23] text-gray-300 mt-16">
+  <div class="max-w-6xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-10">
+    
+    <!-- Colonne 1 -->
+    <div>
+      <h3 class="text-lg font-bold mb-4 text-white">Partition Urbaine</h3>
+      <p class="text-sm leading-relaxed">
+        La ville parle, mais rarement on l’écoute...
+      </p>
+    </div>
+
+    <!-- Colonne 2 -->
+    <div>
+      <h3 class="text-lg font-bold mb-4 text-white">Navigation</h3>
+      <ul class="space-y-2 text-sm">
+        <li><a href="#" class="hover:text-white">Accueil</a></li>
+        <li><a href="sonotheque.html" class="hover:text-white">Sonothèque</a></li>
+        <li><a href="rec.html" class="hover:text-white">Contribuer</a></li>
+        <li><a href="#" class="hover:text-white">À propos</a></li>
+      </ul>
+    </div>
+
+    <!-- Colonne 3 -->
+    <div>
+      <h3 class="text-lg font-bold mb-4 text-white">Contact</h3>
+      <ul class="space-y-2 text-sm">
+        <li>Email : <a href="mailto:contact@gael-maignan.fr" class="hover:text-white">contact@gael-maignan.fr</a></li>
+        <li>Site : <a href="https://gael-maignan.fr" class="hover:text-white" target="_blank">https://gael-maignan.fr</a></li>
+        <li>LinkedIn : <a href="https://www.linkedin.com/in/gael-maignan/" class="hover:text-white" target="_blank">Gaël Maignan</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-gray-700 text-center text-sm py-4">
+    © <span id="currentYear"></span> Partition Urbaine — Tous droits réservés
+  </div>
+
+  <script>
+    // Obtenir l'année actuelle
+    const currentYear = new Date().getFullYear();
+    
+    // Afficher l'année dans le span avec l'id "currentYear"
+    document.getElementById("currentYear").textContent = currentYear;
+  </script>
 </footer>
+
 </body>
 </html>
