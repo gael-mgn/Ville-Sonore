@@ -235,13 +235,46 @@
       </div>
   </section>
 
+  <section id="nouveautes" class="max-w-6xl mx-auto px-6 py-12">
+  <h2 class="text-3xl font-bold mb-4">Derniers sons</h2>
+
+<!-- Skeleton loading (Dark Theme) -->
+<div id="latestClips-skeletons" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <div class="animate-pulse flex flex-col space-y-4 bg-gray-800 rounded-lg p-4">
+    <div class="h-20 bg-gray-700 rounded"></div>
+    <div class="h-4 bg-gray-700 rounded w-3/4"></div>
+    <div class="h-4 bg-gray-700 rounded w-1/2"></div>
+  </div>
+  <div class="animate-pulse flex flex-col space-y-4 bg-gray-800 rounded-lg p-4">
+    <div class="h-20 bg-gray-700 rounded"></div>
+    <div class="h-4 bg-gray-700 rounded w-3/4"></div>
+    <div class="h-4 bg-gray-700 rounded w-1/2"></div>
+  </div>
+  <div class="animate-pulse flex flex-col space-y-4 bg-gray-800 rounded-lg p-4">
+    <div class="h-20 bg-gray-700 rounded"></div>
+    <div class="h-4 bg-gray-700 rounded w-3/4"></div>
+    <div class="h-4 bg-gray-700 rounded w-1/2"></div>
+  </div>
+</div>
+
+
+  <!-- Vrai contenu (caché au départ) -->
+  <div id="latestClips" class="hidden grid grid-cols-1 md:grid-cols-3 gap-6">
+    
+  </div>
+</section>
+
+
+
+<!--
+
     <section id="derniers-audios" class="max-w-6xl mx-auto px-6 py-8 mt-3">
          <div class="view-elements">
   <h2 class="text-3xl font-bold mb-4">Dernières entrées</h2>
   <a href="sonotheque.html" class="view-all">Voir toutes les entrées</a>
 </div>
       <div id="latestClips" class="grid grid-cols-1 sm:grid-cols-3 gap-6"></div>
-    </section>
+    </section>-->
 
 
 
@@ -485,6 +518,8 @@ categories: (categories && typeof categories === 'string') ? stringToArray(categ
 async function main() {
 
   await loadClips();
+  document.getElementById("latestClips-skeletons").classList.add("hidden");
+      document.getElementById("latestClips").classList.remove("hidden");
   function afficherDerniersAudios() {
   // On trie par date (puis heure) du plus récent au plus ancien
   const derniers = [...clips].sort((a, b) => {
