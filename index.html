@@ -216,8 +216,8 @@
   <nav>
     <a href="#">Accueil</a>
      <a href="sonotheque.html">Sonothèque</a>
-    <a href="rec.html">Contribuer</a>
-    <a href="#">À propos</a>
+    <a href="contribute.html">Contribuer</a>
+    <a href="about.html">À propos</a>
   </nav>
 </div>
 
@@ -282,15 +282,65 @@
 </style>
 
 
+<!-- Ajoute dans ton <head> -->
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-    <section id="nouveautes" class="max-w-6xl mx-auto px-6 py-12 justify">
-      <h2 class="text-3xl font-bold mb-4">Note d’intention</h2>
-      <p>La ville parle, mais rarement on l’écoute. Ses voix se mêlent, se superposent, se perdent parfois dans le bruit de fond de notre quotidien. Pourtant, ces sons façonnent notre rapport intime aux lieux : le cri du marchand de fruits sur la place du marché, la rumeur douce d’un square un dimanche après-midi, la résonance métallique d’une passerelle de gare. Ils composent une partition vivante, à la fois banale et unique, qui disparaît souvent sans laisser de trace.</p>
-      <p><em>La Ville Sonore</em> est une tentative de capter cette mémoire fugace.
-Il s’agit d’arpenter la ville, micro en main, pour en extraire des fragments d’ambiances, de voix, de rythmes, et les conserver comme on conserverait une archive précieuse. Chaque enregistrement est réalisé in situ, dans un lieu précis, à un moment donné, afin de saisir son identité sonore.</p>
-<p>Au-delà du simple enregistrement, le projet se veut une cartographie sensible : les sons seront géolocalisés sur une carte interactive, accompagnés, si nécessaire, de courts textes explicatifs, traces d’histoires, indices sociaux, regards sur l’urbanisme et les usages. L’objectif est de permettre au public de voyager par l’oreille, de retrouver ou de découvrir la ville autrement.</p><p>Il ne s’agit pas seulement de documenter, mais aussi de révéler. L’oreille devient outil d’observation, la ville devient matière musicale, et chaque son, même le plus anodin, devient porteur de sens.
-Ce projet souhaite rappeler que l’identité d’une ville ne se lit pas uniquement dans ses pierres ou ses plans, mais aussi dans ses murmures.</p>
-    </section>
+<section id="nouveautes" class="max-w-6xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center justify-between">
+  <!-- Texte à gauche -->
+  <div class="w-full md:w-1/2 pr-0 md:pr-8 mb-8 md:mb-0">
+    <h2 class="text-3xl font-bold mb-2">À la Une — Cartes postales sonores</h2>
+    <p class="text-2xl font-bold mb-4">Écouter un lieu, c’est déjà voyager</p>
+    <p class="mb-4">
+      Une carte postale raconte une image figée, un instant capturé. Mais qu’en est-il des sons qui donnent vie à un endroit ? Les Cartes Postales Sonores prolongent ce geste familier en lui donnant une nouvelle dimension : celle de l’écoute.
+    </p>
+    <a href="" class="hover:underline font-semibold">En savoir plus</a>
+  </div>
+
+  <!-- Carrousel à droite -->
+  <div class="w-full md:w-1/2">
+    <div class="swiper rounded-lg shadow-lg">
+      <div class="swiper-wrapper">
+        <!-- Slide 1 -->
+        <div class="swiper-slide relative">
+          <img src="img/occitanie.webp" alt="Toulouse" class="w-full h-80 object-cover rounded-lg">
+          <div class="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-center text-white p-4 rounded-lg">
+            <h3 class="text-xl font-bold mb-2">Carte Postale Sonore — Occitània</h3>
+            <a href="map.html?tag=occitanie" class="px-4 py-2 rounded-lg shadow-md hover:underline">Découvrir</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination & navigation -->
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Init Swiper -->
+<script>
+  const swiper = new Swiper('.swiper', {
+    loop: true,
+    autoplay: {
+      delay: 4000,
+      disableOnInteraction: false,
+    },
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+  });
+</script>
 
 
 
@@ -400,7 +450,7 @@ Ce projet souhaite rappeler que l’identité d’une ville ne se lit pas unique
   <!-- Load Leaflet & MarkerCluster dynamically to avoid "L is not defined" errors -->
   <script>
     
-
+const enableClustering = false; 
 
 
 
@@ -434,8 +484,7 @@ categories: (categories && typeof categories === 'string') ? stringToArray(categ
 // Fonction principale qui attend le chargement
 async function main() {
 
-  await loadClips(); // Attend que clips2 soit rempli
-
+  await loadClips();
   function afficherDerniersAudios() {
   // On trie par date (puis heure) du plus récent au plus ancien
   const derniers = [...clips].sort((a, b) => {
@@ -486,14 +535,10 @@ if(lienEnfance){
       audio.src = btn.dataset.url;
       audio.play();
     });
-  });
-}
+  });}
 
-afficherDerniersAudios();
-  console.log(clips); // clips2 est bien rempli ici
+  afficherDerniersAudios();
 
-
-// simple script loader that appends to document.head
     function loadScript(src){
       return new Promise((resolve, reject) => {
         const s = document.createElement('script');
@@ -502,16 +547,14 @@ afficherDerniersAudios();
         s.onload = () => resolve(src);
         s.onerror = (e) => reject(new Error('Failed to load script: ' + src));
         document.head.appendChild(s);
-      });
-    }
+      });}
 
     function showFatalError(message, details){
       console.error(message, details);
       const overlay = document.createElement('div');
       overlay.className = 'loader-overlay';
       overlay.innerHTML = `<div class="loader-box"><strong>${message}</strong><div style="margin-top:8px;color:#666">${details || ''}</div></div>`;
-      document.body.appendChild(overlay);
-    }
+      document.body.appendChild(overlay);}
 
     // try to load leaflet + markercluster sequentially, then init
     (async function bootstrap(){
@@ -532,9 +575,6 @@ afficherDerniersAudios();
       }
     })();
 
-
-
-
     function normalizedLink(url){
       if(!url) return url;
       // if it's already the uc?export=download form, return
@@ -543,22 +583,22 @@ afficherDerniersAudios();
       const m = url.match(/\/d\/([a-zA-Z0-9_-]+)(?:\/|$)/);
       if(m && m[1]) return `https://corsproxy.io/?https://drive.google.com/uc?export=download&id=${m[1]}`;
       // fallback to leaving the URL as-is
-      return url;
-    }
+      return url;}
 
     function initMap() {
-      try{
+      try {
         // create map
         const map = L.map('map', { zoomControl:true, attributionControl:false }).setView([43.6,1.38], 12);
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://www.carto.com/">CARTO</a>',
-  subdomains: 'abcd',
-  maxZoom: 19
-}).addTo(map);
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://www.carto.com/">CARTO</a>',
+          subdomains: 'abcd',
+          maxZoom: 19
+        }).addTo(map);
 
+        // ✅ soit un cluster group, soit un simple layer group
+        const markers = enableClustering ? L.markerClusterGroup() : L.layerGroup();
 
-        const markers = L.markerClusterGroup();
         const audio = document.getElementById('globalAudio');
         let currentId = null;
 
@@ -587,23 +627,31 @@ afficherDerniersAudios();
 
         // Fonction pour récupérer 3 catégories uniques
 function getUniqueCategories(clips) {
-  let uniqueCategories = new Set(); // Utilisation d'un Set pour garantir l'unicité
+  let uniqueCategories = new Set();
   let index = 0;
 
-  // Parcourir le tableau jusqu'à ce que nous ayons 3 catégories différentes
   while (uniqueCategories.size < 3 && index < clips.length) {
     const clip = clips[index];
-    
-    // Ajouter les catégories de l'élément actuel à uniqueCategories
-    clip.categories.forEach(category => uniqueCategories.add(category));
-    
-    // Passer à l'élément suivant
+
+    // Vérifie que clip.categories est un tableau valide
+    if (
+      Array.isArray(clip.categories) &&
+      clip.categories.length > 0 &&
+      !(clip.categories.length === 1 && clip.categories[0].trim() === '')
+    ) {
+      // Ajouter uniquement les catégories non vides (filtrées)
+      clip.categories
+        .filter(cat => cat.trim() !== '')
+        .forEach(cat => uniqueCategories.add(cat));
+    }
+
     index++;
   }
 
-  // Retourner les catégories uniques trouvées
+  console.log("ajout :", uniqueCategories);
   return Array.from(uniqueCategories);
 }
+
 
 
         function addClipsToSidebar(list){
@@ -634,47 +682,85 @@ const filteredCollections = collections.filter(item => categories.includes(item.
 generateTags(filteredCollections);
 
 
-        // add markers
-        clips.forEach((clip, idx)=>{
-          if(typeof clip.lat !== 'number' || typeof clip.lon !== 'number') return;
+
+      // icône détaillée (zoom proche)
+    const detailedIcon = new L.DivIcon({
+      className: 'custom-svg-icon',
+      html: `
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="34" viewBox="0 0 36 50">
+          <path d="M18 0C8.06 0 0 8.06 0 18c0 12.03 18 32 18 32s18-19.97 18-32C36 8.06 27.94 0 18 0z" fill="#762B84"/>
+          <circle cx="18" cy="18" r="7" fill="white"/>
+        </svg>
+      `,
+      iconSize: [36, 50],
+      iconAnchor: [18, 50],
+      popupAnchor: [0, -50]
+    });
+
+    // icône cercle violet (zoom éloigné)
+    const simpleIcon = new L.DivIcon({
+      className: 'custom-circle-icon',
+      html: `<svg width="24" height="24" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="black" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <circle cx="50" cy="50" r="30" fill="purple" stroke="white" stroke-width="4" filter="url(#shadow)" />
+</svg>
+`,
+      iconSize: [16, 16],
+      iconAnchor: [8, 8]
+    });
+
+    // stocker tous les marqueurs
+    const allMarkers = [];
 
 
-const customIcon = new L.DivIcon({
-  className: 'custom-svg-icon',
-  html: `
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="34" viewBox="0 0 36 50">
-      <path d="M18 0C8.06 0 0 8.06 0 18c0 12.03 18 32 18 32s18-19.97 18-32C36 8.06 27.94 0 18 0z" fill="#762B84"/>
-      <circle cx="18" cy="18" r="7" fill="white"/>
-    </svg>
-  `,
-  iconSize: [36, 50],
-  iconAnchor: [18, 50],
-  popupAnchor: [0, -50]
-});
 
 
-const m = L.marker([clip.lat, clip.lon], { icon: customIcon });
+      clips.forEach((clip, idx) => {
+      if(typeof clip.lat !== 'number' || typeof clip.lon !== 'number') return;
+
+      const m = L.marker([clip.lat, clip.lon], { icon: detailedIcon });
+
+      const popupContent = document.createElement('div');
+      popupContent.innerHTML = `<strong>${escapeHtml(clip.titre)}</strong><br/><em>${escapeHtml(clip.date)} ${escapeHtml(clip.heure)}</em><br/><div style='margin-top:8px'>${escapeHtml(clip.description || '')}</div><div style='margin-top:8px'><button data-idx='${idx}' class='popup-play'>▶ Écouter</button></div>`;
+
+      m.bindPopup(popupContent);
+
+      m.on('popupopen', (e) => {
+        try {
+          const btn = e.popup._contentNode?.querySelector('.popup-play');
+          if (btn) btn.addEventListener('click', () => playClip(idx));
+        } catch(err) {
+          console.warn('Impossible d’attacher l’événement popup-play', err);
+        }
+      });
+
+      markers.addLayer(m);
+      allMarkers.push(m);
+    });
+
+    // ✅ ajoute au bon type de couche
+    map.addLayer(markers);
 
 
 
-          const popupContent = document.createElement('div');
-          popupContent.innerHTML = `<strong>${escapeHtml(clip.titre)}</strong><br/><em>${escapeHtml(clip.date)} ${escapeHtml(clip.heure)}</em><br/><div style='margin-top:8px'>${escapeHtml(clip.description || '')}</div><div style='margin-top:8px'><button data-idx='${idx}' class='popup-play'>▶ Écouter</button></div>`;
+    // ✅ changement d'icône selon le zoom
+    const ZOOM_THRESHOLD = 10; // seuil de zoom à partir duquel on met l’icône détaillée
+    function updateIcons() {
+      const currentZoom = map.getZoom();
+      allMarkers.forEach(m => {
+        m.setIcon(currentZoom < ZOOM_THRESHOLD ? simpleIcon : detailedIcon);
+      });
+    }
 
-          m.bindPopup(popupContent);
+    // appel initial + écoute des changements
+    updateIcons();
+    map.on('zoomend', updateIcons);
 
-          m.on('popupopen', (e)=>{
-            try{
-              const btn = e.popup._contentNode && e.popup._contentNode.querySelector && e.popup._contentNode.querySelector('.popup-play');
-              if(btn) btn.addEventListener('click', ()=> playClip(idx));
-            }catch(err){
-              console.warn('Impossible dattacher lévénement popup-play', err);
-            }
-          });
 
-          markers.addLayer(m);
-        });
-
-        map.addLayer(markers);
 
         // Fit bounds if we have coordinates (safe handling for 1 point)
         const latlngs = clips.filter(c=>typeof c.lat === 'number' && typeof c.lon === 'number').map(c=>[c.lat,c.lon]);
@@ -780,8 +866,8 @@ main();
       <ul class="space-y-2 text-sm">
         <li><a href="#" class="hover:text-white">Accueil</a></li>
         <li><a href="sonotheque.html" class="hover:text-white">Sonothèque</a></li>
-        <li><a href="rec.html" class="hover:text-white">Contribuer</a></li>
-        <li><a href="#" class="hover:text-white">À propos</a></li>
+        <li><a href="contribute.html" class="hover:text-white">Contribuer</a></li>
+        <li><a href="about.html" class="hover:text-white">À propos</a></li>
       </ul>
     </div>
 

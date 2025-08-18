@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>La Ville Sonore - Contribuer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="keywords" content="La ville sonore, cartographie sonore, contribuer, participatif, cartographie, son, Gaël Maignan">
+  <meta name="description" content="Vous aussi, contribuez à cette cartographie sonore de l'espace urbain !">
+
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Tailwind via CDN pour prototype rapide -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script src="js/collections.js"></script>
+  <link rel="stylesheet" href="style/main.css">
+
+  <link rel="icon" href="logo.png" type="image/x-icon">
+
+
+  <style>
+    /* --- Style global sombre --- */
+
+
+      html, body {
+        padding-bottom: 1rem;
+    margin: 0;
+    font-family: 'Outfit', sans-serif;
+    background: linear-gradient(135deg, #121212, #1f1f1f);
+      color: #f0f0f0;
+  }
+
+
+
+
+    a {
+      color: #C2BCD7;
+    }
+
+    /* --- Boutons --- */
+    .controls {
+      display: flex;
+      gap: 15px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    button {
+      padding: 12px 26px;
+      border: none;
+      border-radius: 99px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 500;
+      transition: transform 0.15s ease, box-shadow 0.3s ease, background 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
+    button:active { transform: scale(0.96); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    #startBtn { background: linear-gradient(135deg, #762B84, #9d44b8); color: white; }
+    #stopBtn  {  color: white;  background: transparent; padding: 12px 26px;
+      border: solid #762B84 3px;}
+    /* --- Statut --- */
+    #status {
+      margin: 10px 0;
+      font-weight: bold;
+      text-align: center;
+      color: #C2BCD7;
+      min-height: 1.5em;
+    }
+  </style>
+</head>
+<body>
+  
+<style>
+:root {
+  --brand-bg: #151221;
+  --brand-text: #D3CDE4;
+  --brand-accent: #762B84;
+}
+
+/* HEADER GLOBAL */
+.site-header {
+  background: var(--brand-bg);
+  color: var(--brand-text);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: system-ui, sans-serif;
+  position: relative;
+  z-index: 1000;
+}
+
+/* LOGO */
+.site-header .logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.site-header .brand-mark {
+  width: 42px;
+  height: 42px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: white;
+  font-size: 1rem;
+  letter-spacing: 1px;
+}
+
+/* Image logo spécifique */
+.site-header .brand-mark img {
+  width: 42px;
+  height: 42px;
+  border-radius: 6px;
+  object-fit: contain;
+}
+
+/* NAVIGATION */
+nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+nav a {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+  position: relative;
+  padding: 4px 0;
+  transition: color 0.25s ease;
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: var(--brand-accent);
+  transition: width 0.25s ease;
+}
+
+nav a:hover {
+  color: white;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+/* MENU BURGER */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.menu-toggle span {
+  width: 24px;
+  height: 2px;
+  background: var(--brand-text);
+  transition: 0.3s;
+}
+
+/* RESPONSIVE */
+@media (max-width: 700px) {
+  nav {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: var(--brand-bg);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px 20px;
+    gap: 16px;
+    transform: translateY(-20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    width: 100vw;
+  }
+  nav.active {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .menu-toggle {
+    display: flex;
+  }
+}
+
+@media (min-width: 768px) {
+  .no-mobile {
+    display: none;
+  }
+}
+</style>
+
+<div class="site-header">
+  <a href="index.html" class="logo">
+    <!-- Remplace "logo.png" par le chemin réel de ton logo -->
+    <div class="brand-mark no-mobile">
+      <img src="logo.png" alt="Logo La Ville Sonore" />
+    </div>
+    <div style="font-weight:700;" class="title">La Ville Sonore</div>
+  </a>
+
+  <div class="menu-toggle" onclick="document.querySelector('nav').classList.toggle('active')">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="sonotheque.html">Sonothèque</a>
+    <a href="#">Contribuer</a>
+    <a href="about.html">À propos</a>
+  </nav>
+</div>
+
+
+<main>
+
+
+
+
+
+  <div style="max-width:1000px; text-align: center; margin: auto;">
+
+      <h1 class="text-4xl mt-10" style="font-weight:600;">La Ville Sonore</h1>
+
+  <p style="color: #C2BCD7; padding: 1rem;">Vous aussi, contribuez à cette cartographie sonore de l'espace urbain !</p>
+    
+  </div>
+
+
+
+
+  <div class="controls">
+   <button id="startBtn">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8 5v14l11-7z"/>
+  </svg>
+  <span>COMMENCER</span>
+</button>
+
+<style>
+#startBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;        /* alignement vertical */
+  justify-content: center;    /* alignement horizontal */
+  gap: 6px;
+  font-family: 'Outfit', sans-serif;
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  border-radius: 99px;
+  cursor: pointer;
+  min-width: 200px;           /* optionnel : largeur fixe pour montrer le centrage */
+  text-align: center;
+}
+
+#startBtn svg {
+  display: block;
+}
+</style>
+
+    <button id="stopBtn" disabled>ARRÊTER</button>
+  </div>
+
+  <p id="status"></p>
+<style>
+/* --- Zone formulaire redesign --- */
+.metadata-box {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+  background: linear-gradient(145deg, rgba(30, 30, 30, 0.98), rgba(45, 45, 45, 0.98));
+  border-radius: 16px;
+  padding: 24px;
+  margin: 20px auto 0;
+  width: 90%;
+  max-width: 460px;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.6);
+  animation: fadeIn 0.4s ease;
+  font-family: 'Outfit', sans-serif;
+}
+
+.metadata-box label {
+  font-weight: 600;
+  font-size: 15px;
+  color: #e4e4e4;
+}
+
+.metadata-box #titreInput,
+.metadata-box textarea {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid #3a3a3a;
+  border-radius: 10px;
+  background: #1e1e1e;
+  color: #f8f8f8;
+  transition: all 0.25s ease;
+  outline: none;
+  box-sizing: border-box; /* ✅ Empêche le dépassement */
+  font-family: 'Outfit', sans-serif;
+}
+
+.metadata-box input:focus,
+.metadata-box textarea:focus {
+  border-color: #C2BCD7;
+  box-shadow: 0 0 4px rgba(194, 188, 215, 0.6);
+  background: #262626;
+}
+
+.metadata-box textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.metadata-box button {
+  background: linear-gradient(135deg, #762B84, #9d44b8);
+  color: white;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: 'Outfit', sans-serif;
+  border: none;
+  border-radius: 99px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  letter-spacing: 0.5px;
+}
+
+.metadata-box button:hover {
+  background: linear-gradient(135deg, #8b35a0, #b75cd2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(183, 92, 210, 0.4);
+}
+
+/* --- Audio --- */
+.metadata-box audio {
+  margin-top: 8px;
+  
+  width: 90%;
+  margin: auto;
+  border-radius: 8px;
+  padding: 6px;
+}
+
+/* --- Animations --- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Mobile --- */
+@media (max-width: 600px) {
+  .metadata-box {
+    padding: 18px;
+    gap: 14px;
+  }
+  .metadata-box button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+
+
+</style>
+
+
+
+
+<style>
+
+/* --- Dropdown --- */
+.dropdown {
+  position: relative;
+  width: 100%;
+  font-size: 15px;
+  user-select: none;
+}
+
+.dropdown-toggle {
+  background: #1e1e1e;
+  color: #f8f8f8;
+  padding: 12px 14px;
+  border: 1px solid #3a3a3a;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dropdown-toggle::after {
+  content: "▾"; /* petite flèche */
+  font-size: 14px;
+  color: #bbb;
+  margin-left: 8px;
+  transition: transform 0.25s ease;
+}
+
+.dropdown.open .dropdown-toggle::after {
+  transform: rotate(-180deg);
+}
+
+.dropdown-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 12px;
+  padding: 8px 0;
+  z-index: 20;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  max-height: 220px;         /* ✅ défilement si trop d'options */
+  overflow-y: auto;
+  opacity: 0;
+  transform: translateY(-5px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.dropdown.open .dropdown-menu {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.dropdown-menu label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-weight: 400;
+  color: #e4e4e4;
+}
+
+.dropdown-menu label:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.dropdown-menu input[type="checkbox"] {
+  accent-color: #9d44b8;
+  cursor: pointer;
+}
+
+
+</style>
+
+<div id="metadataBox" class="metadata-box">
+  <label for="titreInput">Titre :</label>
+  <input type="text" id="titreInput" placeholder="Titre de l'enregistrement (optionnel)">
+
+  <label for="descriptionInput">Description :</label>
+  <textarea id="descriptionInput" rows="3" placeholder="Description (optionnel)"></textarea>
+
+<label>Catégories :</label>
+  <div class="dropdown">
+    <div class="dropdown-toggle" id="dropdownToggle">Sélectionner des catégories</div>
+    <div class="dropdown-menu">
+    </div>
+  </div>
+
+  <script>
+  // Récupération de l'élément de menu déroulant
+  const dropdownMenu = document.querySelector('.dropdown-menu');
+
+  // Vide le contenu existant
+  dropdownMenu.innerHTML = '';
+
+  // Génère dynamiquement les cases à cocher
+  collections.forEach(collection => {
+    const label = document.createElement('label');
+    
+    // Tronquer la description à 50 caractères
+    const description = collection.description 
+      ? collection.description.substring(0, 100) + (collection.description.length > 100 ? "..." : "")
+      : "";
+
+    label.innerHTML = `
+      <div>
+        <input type="checkbox" value="${collection.id}"> 
+        <strong>${collection.titre}</strong><br>
+        <small style="color:#aaa;font-size:13px;">${description}</small>
+      </div>
+    `;
+    
+    dropdownMenu.appendChild(label);
+  });
+</script>
+
+
+  <audio id="audioPlayback" controls></audio>
+
+  <button id="submitBtn">SOUMETTRE</button>
+</div>
+
+
+
+<script>document.addEventListener("DOMContentLoaded", () => {
+  const dropdown = document.querySelector(".dropdown");
+  const toggle = document.getElementById("dropdownToggle");
+  const menu = dropdown.querySelector(".dropdown-menu");
+  const checkboxes = menu.querySelectorAll("input[type='checkbox']");
+
+  // Ouvrir / fermer
+  toggle.addEventListener("click", () => {
+    dropdown.classList.toggle("open");
+  });
+
+  // Fermer si clic en dehors
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".dropdown")) {
+      dropdown.classList.remove("open");
+    }
+  });
+
+  // Affichage des choix sélectionnés
+  checkboxes.forEach(cb => {
+    cb.addEventListener("change", () => {
+      const selected = [...checkboxes]
+        .filter(c => c.checked)
+        .map(c => c.parentNode.textContent.trim());
+      toggle.textContent = selected.length ? selected.join(", ") : "Sélectionner des catégories";
+    });
+  });
+});
+
+
+</script>
+
+
+
+
+
+
+
+
+  <script>
+    /************ CONFIG À REMPLACER ************/
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxo4zANyxLOEUIX29T0t7-_PmVGTortQHktqDcZZOxr5or1cAy9dAV7kvWQZeSIueuZ/exec"; // <- ton URL Apps Script
+    const FOLDER_ID  = "1NckhGzOgAJ8c8Aax2jR_nCuAxwSFEC44"; // <- ID du dossier Drive de destination
+    /********************************************/
+
+    // Éléments DOM
+    const startBtn       = document.getElementById("startBtn");
+    const stopBtn        = document.getElementById("stopBtn");
+    const submitBtn      = document.getElementById("submitBtn");
+    const statusEl       = document.getElementById("status");
+    const metadataBox    = document.getElementById("metadataBox");
+    const titreInput     = document.getElementById("titreInput");
+    const descriptionInput = document.getElementById("descriptionInput");
+    const audioPlayback  = document.getElementById("audioPlayback");
+
+    // État / données
+    let audioStream, audioContext, sourceNode, processorNode, silentGain;
+    let audioBufferData = [];
+    let sampleRate = 44100;
+    let recording = false;
+    let startTime = 0, endTime = 0;
+    let lastAudioBlob = null;
+
+
+
+    // Optionnel : collecte de la position
+    let position = { lat: null, lon: null };
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        ({coords}) => { position.lat = coords.latitude; position.lon = coords.longitude; },
+        () => {}, { enableHighAccuracy: true, maximumAge: 10_000, timeout: 5_000 }
+      );
+    }
+
+    async function initMic() {
+      try {
+        audioStream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            sampleRate: 48000,
+            channelCount: 1,
+            echoCancellation: false,
+            noiseSuppression: false,
+            autoGainControl: false
+          }
+        });
+
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        sampleRate = audioContext.sampleRate;
+
+        sourceNode = audioContext.createMediaStreamSource(audioStream);
+        processorNode = audioContext.createScriptProcessor(8192, 1, 1);
+
+        // Gain à zéro pour éviter tout larsen/monitoring audible
+        silentGain = audioContext.createGain();
+        silentGain.gain.value = 0;
+
+        processorNode.onaudioprocess = e => {
+          if (!recording) return;
+          const channelData = e.inputBuffer.getChannelData(0);
+          // Copier le chunk pour ne pas referencer le buffer réutilisé
+          audioBufferData.push(new Float32Array(channelData));
+        };
+
+        // Chaîne : source -> processor -> silentGain -> destination
+        sourceNode.connect(processorNode);
+        processorNode.connect(silentGain);
+        silentGain.connect(audioContext.destination);
+
+      } catch (err) {
+        statusEl.textContent = "❌ Accès micro refusé ou indisponible.";
+        console.error(err);
+        throw err;
+      }
+    }
+
+    initMic();
+
+     // Journal local
+    const data = [];
+
+
+    function floatTo16BitPCM(float32Array) {
+      const buffer = new ArrayBuffer(float32Array.length * 2);
+      const view = new DataView(buffer);
+      let offset = 0;
+      for (let i = 0; i < float32Array.length; i++, offset += 2) {
+        let s = Math.max(-1, Math.min(1, float32Array[i]));
+        view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      }
+      return view;
+    }
+
+    function writeString(view, offset, string) {
+      for (let i = 0; i < string.length; i++) view.setUint8(offset + i, string.charCodeAt(i));
+    }
+
+    function writeWAV(samples, sampleRate) {
+      const buffer = new ArrayBuffer(44 + samples.length * 2);
+      const view = new DataView(buffer);
+
+      // RIFF header
+      writeString(view, 0, 'RIFF');
+      view.setUint32(4, 36 + samples.length * 2, true);
+      writeString(view, 8, 'WAVE');
+
+      // fmt chunk
+      writeString(view, 12, 'fmt ');
+      view.setUint32(16, 16, true); // chunk size
+      view.setUint16(20, 1, true);  // PCM
+      view.setUint16(22, 1, true);  // mono
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, sampleRate * 2, true); // byte rate
+      view.setUint16(32, 2, true); // block align
+      view.setUint16(34, 16, true); // bits per sample
+
+      // data chunk
+      writeString(view, 36, 'data');
+      view.setUint32(40, samples.length * 2, true);
+
+      const pcmData = floatTo16BitPCM(samples);
+      new Uint8Array(buffer, 44).set(new Uint8Array(pcmData.buffer));
+      return buffer;
+    }
+
+    startBtn.onclick = async () => {
+      try {
+        /*if (!audioStream) await initMic();*/
+        audioBufferData = [];
+        recording = true;
+        startTime = Date.now();
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+        statusEl.textContent = "Enregistrement en cours...";
+        metadataBox.style.display = "none";
+        lastAudioBlob = null;
+      } catch (e) { /* déjà géré */ }
+    };
+
+    stopBtn.onclick = () => {
+      if (!recording) return;
+      recording = false;
+      endTime = Date.now();
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+
+      // Fusionner les chunks
+      const totalLength = audioBufferData.reduce((acc, cur) => acc + cur.length, 0);
+      if (totalLength === 0) {
+        statusEl.textContent = "⚠️ Aucun échantillon capturé.";
+        return;
+      }
+      const merged = new Float32Array(totalLength);
+      let offset = 0;
+      for (const chunk of audioBufferData) { merged.set(chunk, offset); offset += chunk.length; }
+
+      const wavBuffer = writeWAV(merged, sampleRate);
+      lastAudioBlob = new Blob([wavBuffer], { type: "audio/wav" });
+      audioPlayback.src = URL.createObjectURL(lastAudioBlob);
+
+      const dureeSec = ((endTime - startTime) / 1000).toFixed(1);
+      metadataBox.dataset.duree = dureeSec;
+      metadataBox.style.display = "flex";
+      statusEl.textContent = `Fichier WAV prêt (${dureeSec}s). Renseignez les infos puis "Soumettre".`;
+    };
+
+    submitBtn.onclick = () => {
+      if (!lastAudioBlob) {
+        statusEl.textContent = "❌ Aucun fichier à envoyer. Enregistre d'abord.";
+        return;
+      }
+      if (!SCRIPT_URL || SCRIPT_URL.includes("REMPLACE_MOI")) {
+        statusEl.textContent = "❌ SCRIPT_URL non configurée.";
+        return;
+      }
+      if (!FOLDER_ID || FOLDER_ID.includes("REMPLACE_MOI")) {
+        statusEl.textContent = "❌ FOLDER_ID non configuré.";
+        return;
+      }
+
+
+      const now = new Date();
+
+      const titre = titreInput.value.trim() || `Enregistrement`;
+      const description = descriptionInput.value.trim() || `${titre} — ${now.toLocaleDateString()}`;
+      const dureeSec = metadataBox.dataset.duree || ((endTime - startTime) / 1000).toFixed(1);
+
+      const date = now.toLocaleDateString();
+      const heure = now.toLocaleTimeString();
+
+      if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        ({coords}) => { position.lat = coords.latitude; position.lon = coords.longitude; },
+        () => {}, { enableHighAccuracy: true, maximumAge: 10_000, timeout: 5_000 }
+      );
+    }
+
+      // Journal local
+      data.push({
+        titre,
+        description,
+        lat: position.lat,
+        lon: position.lon,
+        date,
+        heure,
+        duree: dureeSec
+      });
+      console.log("Données enregistrées :", data);
+
+      statusEl.textContent = "Préparation du fichier (Base64)…";
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        try {
+          const base64Data = (reader.result || "").toString().split(',')[1];
+          if (!base64Data) {
+            statusEl.textContent = "❌ Conversion Base64 échouée.";
+            return;
+          }
+          statusEl.textContent = "Envoi vers Google Drive…";
+          fetch(SCRIPT_URL, {
+            method: "POST",
+            body: new URLSearchParams({
+              filename: `enregistrement_${Date.now()}.wav`,
+              mimetype: "audio/wav",
+              data: base64Data,
+              folderId: FOLDER_ID
+            })
+          })
+          .then(res => res.json())
+          .then(result => {
+            if (result.status === "success") {
+                async function googleSheets(values, spreadsheetId, sheetName, date = false) {
+  const payload = {
+    spreadsheetId: spreadsheetId,
+    sheetName: sheetName,
+    values: values,
+    addDate : date
+  };
+
+  const data = encodeURIComponent(JSON.stringify(payload));
+  const body = `data=${data}`;
+
+  const url = 'https://script.google.com/macros/s/AKfycbzbNtW1cUxIFPFJuBF69O30OfaafAhPbjsYYXwtPeINICfWSpxh8jqUWtSbaV6nOvGW/exec';
+
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: body
+    });
+
+    const text = await res.text();
+    console.log('Réponse du script :', text);
+    return text;
+  } catch (err) {
+    console.error('Erreur lors de l\'envoi :', err);
+    return null;
+  }
+}
+
+
+
+
+  const checkboxes = document.querySelectorAll(".dropdown-menu input[type='checkbox']");
+  
+  // Créer un tableau pour stocker les valeurs sélectionnées
+  const selectedValues = [];
+  
+  // Parcourir toutes les cases à cocher
+  checkboxes.forEach(checkbox => {
+    if (checkbox.checked) {
+      // Si la case est cochée, ajouter sa valeur au tableau
+      selectedValues.push(checkbox.value);
+    }
+  });
+
+
+
+
+
+
+
+
+    // Créer le texte à afficher, avec des points-virgules séparant les valeurs
+    const resultText = selectedValues.join("; ");
+    
+
+
+
+
+
+
+
+
+
+              googleSheets(
+                  [position.lat, position.lon, date, heure, dureeSec, titre, description, result.fileUrl, resultText],
+                  "16LhO82rFlzNwrnF6B64rKK91_Q7o0Cc9VhhuuJLu9eY",
+                  "Feuille 1"
+              );
+
+
+              statusEl.innerHTML = `Audio uploadé : <a href="${result.fileUrl}" target="_blank" rel="noopener">Ouvrir</a>`;
+              // Reset léger
+              titreInput.value = "";
+              descriptionInput.value = "";
+              metadataBox.style.display = "none";
+            } else {
+              statusEl.textContent = "❌ Erreur Apps Script : " + (result.message || "Inconnue");
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            statusEl.textContent = "❌ Erreur réseau : " + err;
+          });
+        } catch (e) {
+          console.error(e);
+          statusEl.textContent = "❌ Erreur lors de la préparation du fichier.";
+        }
+      };
+      reader.readAsDataURL(lastAudioBlob);
+    };
+
+    // Nettoyage audio quand on quitte la page
+    window.addEventListener("beforeunload", () => {
+      try {
+        if (processorNode) processorNode.disconnect();
+        if (silentGain) silentGain.disconnect();
+        if (sourceNode) sourceNode.disconnect();
+        if (audioContext) audioContext.close();
+        if (audioStream) audioStream.getTracks().forEach(t => t.stop());
+      } catch {}
+    });
+  </script>
+</main>
+
+<footer class="bg-[#1e1f23] text-gray-300 mt-16">
+  <div class="max-w-6xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-10">
+    
+    <!-- Colonne 1 -->
+    <div>
+      <h3 class="text-lg font-bold mb-4 text-white">La Ville Sonore</h3>
+      <p class="text-sm leading-relaxed">
+        La ville parle, mais rarement on l’écoute...
+      </p>
+    </div>
+
+    <!-- Colonne 2 -->
+    <div>
+      <h3 class="text-lg font-bold mb-4 text-white">Navigation</h3>
+      <ul class="space-y-2 text-sm">
+        <li><a href="index.html" class="hover:text-white">Accueil</a></li>
+        <li><a href="sonotheque.html" class="hover:text-white">Sonothèque</a></li>
+        <li><a href="#" class="hover:text-white">Contribuer</a></li>
+        <li><a href="about.html" class="hover:text-white">À propos</a></li>
+      </ul>
+    </div>
+
+    <!-- Colonne 3 -->
+    <div>
+      <h3 class="text-lg font-bold mb-4 text-white">Contact</h3>
+      <ul class="space-y-2 text-sm">
+        <li>Email : <a href="mailto:contact@gael-maignan.fr" class="hover:text-white">contact@gael-maignan.fr</a></li>
+        <li>Site : <a href="https://gael-maignan.fr" class="hover:text-white" target="_blank">https://gael-maignan.fr</a></li>
+        <li>LinkedIn : <a href="https://www.linkedin.com/in/gael-maignan/" class="hover:text-white" target="_blank">Gaël Maignan</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-gray-700 text-center text-sm py-4">
+    © <span id="currentYear"></span> La Ville Sonore — Tous droits réservés
+  </div>
+
+  <script>
+    // Obtenir l'année actuelle
+    const currentYear = new Date().getFullYear();
+    
+    // Afficher l'année dans le span avec l'id "currentYear"
+    document.getElementById("currentYear").textContent = currentYear;
+  </script>
+</footer>
+</body>
+</html>

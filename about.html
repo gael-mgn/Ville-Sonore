@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>La Ville Sonore — Collections thématiques</title>
-  <meta name="keywords" content="La ville sonore, cartographie sonore, collections, urbanisme sensible, Gaël Maignan">
-  <meta name="description" content="Les collections thématiques offrent une autre manière d’écouter la ville. Elles rassemblent des sons par atmosphères ou par imaginaires communs : la chaleur écrasante d’un été, l’énergie des artistes de rue, le vacarme des urgences, les échos des souvenirs d’enfance ou encore les métamorphoses des chantiers. Autant de parcours sensibles pour voyager à travers la mémoire sonore urbaine.">
+  <title>La Ville Sonore — À propos</title>
+  <meta name="keywords" content="Gaël Maignan, à propos, La ville sonore, cartographie sonore, contact, collections, urbanisme sensible">
+  <meta name="description" content="La ville parle, mais rarement on l’écoute. Ses voix se mêlent, se superposent, se perdent parfois dans le bruit de fond de notre quotidien, elles composent une partition vivante, à la fois banale et unique, qui disparaît souvent sans laisser de trace.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,7 +45,7 @@
     <a href="index.html">Accueil</a>
     <a href="sonotheque.html">Sonothèque</a>
     <a href="contribute.html">Contribuer</a>
-    <a href="about.html">À propos</a>
+    <a href="#">À propos</a>
   </nav>
 </div>
 
@@ -56,70 +56,22 @@
         <div class="absolute inset-0 hero-overlay"></div>
         <div class="relative z-10 max-w-6xl mx-auto px-6 h-full flex items-center">
           <div class="max-w-2xl">
-            <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">Collections thématiques</h1>
+            <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">À propos de La Ville Sonore</h1>
             <p class="mt-4 text-lg md:text-l subtitle">Les collections thématiques offrent une autre manière d’écouter la ville. Elles rassemblent des sons par atmosphères ou par imaginaires communs : la chaleur écrasante d’un été, l’énergie des artistes de rue, le vacarme des urgences, les échos des souvenirs d’enfance ou encore les métamorphoses des chantiers. Autant de parcours sensibles pour voyager à travers la mémoire sonore urbaine.</p>
           </div>
         </div>
       </div>
   </section>
 
+     <section id="nouveautes" class="max-w-6xl mx-auto px-6 py-12 justify">
+      <h2 class="text-3xl font-bold mb-4">Note d’intention</h2>
+      <p>La ville parle, mais rarement on l’écoute. Ses voix se mêlent, se superposent, se perdent parfois dans le bruit de fond de notre quotidien. Pourtant, ces sons façonnent notre rapport intime aux lieux : le cri du marchand de fruits sur la place du marché, la rumeur douce d’un square un dimanche après-midi, la résonance métallique d’une passerelle de gare. Ils composent une partition vivante, à la fois banale et unique, qui disparaît souvent sans laisser de trace.</p>
+      <p><em>La Ville Sonore</em> est une tentative de capter cette mémoire fugace.
+Il s’agit d’arpenter la ville, micro en main, pour en extraire des fragments d’ambiances, de voix, de rythmes, et les conserver comme on conserverait une archive précieuse. Chaque enregistrement est réalisé in situ, dans un lieu précis, à un moment donné, afin de saisir son identité sonore.</p>
+<p>Au-delà du simple enregistrement, le projet se veut une cartographie sensible : les sons seront géolocalisés sur une carte interactive, accompagnés, si nécessaire, de courts textes explicatifs, traces d’histoires, indices sociaux, regards sur l’urbanisme et les usages. L’objectif est de permettre au public de voyager par l’oreille, de retrouver ou de découvrir la ville autrement.</p><p>Il ne s’agit pas seulement de documenter, mais aussi de révéler. L’oreille devient outil d’observation, la ville devient matière musicale, et chaque son, même le plus anodin, devient porteur de sens.
+Ce projet souhaite rappeler que l’identité d’une ville ne se lit pas uniquement dans ses pierres ou ses plans, mais aussi dans ses murmures.</p>
+    </section>
 
-<section class="max-w-6xl mx-auto px-6 py-8">
-  <h2 class="text-3xl font-bold mb-8">Collections thématiques</h2>
-
-<script>
-
-    // Fonction pour générer le HTML
-    function generateTags(collections) {
-        const tagSection = document.getElementById('tag-section');
-        
-        collections.forEach(item => {
-            const tag = document.createElement('div');
-            tag.classList.add('tag');
-            tag.id = item.id;
-
-            tag.style.backgroundImage = `url('${item.image}')`;
-
-            const overlay = document.createElement('div');
-            overlay.classList.add('absolute', 'inset-0', 'hero-overlay');
-            tag.appendChild(overlay);
-
-            const tagContent = document.createElement('div');
-            tagContent.classList.add('tag-content');
-
-            const title = document.createElement('h2');
-            title.classList.add('tag-title');
-            title.textContent = item.titre;
-            tagContent.appendChild(title);
-
-            const description = document.createElement('p');
-            description.classList.add('tag-description');
-            description.textContent = item.description || 'Description non disponible.';
-            tagContent.appendChild(description);
-
-            const link = document.createElement('a');
-            link.href = item.lien;
-            link.textContent = 'En savoir plus';
-            tagContent.appendChild(link);
-
-            tag.appendChild(tagContent);
-            tagSection.appendChild(tag);
-        });
-    }
-
-    // Appel de la fonction pour générer les tags
-    document.addEventListener("DOMContentLoaded", function () {
-    // Votre code ici, qui dépend de la disponibilité du DOM
-    generateTags(collections);  // Assurez-vous que `generateTags` est appelé après le chargement complet du DOM
-  });
-</script>
-
-
-<div class="tag-section" id="tag-section"></div>
-
-
-
-</section>
 </main>
 
 <footer class="bg-[#1e1f23] text-gray-300 mt-16">
@@ -140,7 +92,7 @@
         <li><a href="index.html" class="hover:text-white">Accueil</a></li>
         <li><a href="sonotheque.html" class="hover:text-white">Sonothèque</a></li>
         <li><a href="contribute.html" class="hover:text-white">Contribuer</a></li>
-        <li><a href="about.html" class="hover:text-white">À propos</a></li>
+        <li><a href="#" class="hover:text-white">À propos</a></li>
       </ul>
     </div>
 
