@@ -1,5 +1,9 @@
-
 const AUDIO_WORKER_BASE = "https://ville-sonore.gael-maignan.workers.dev/audio";
+
+// Passe à true pendant le développement pour retrouver les logs verbeux dans la console.
+// Les console.error / console.warn restent actifs quel que soit DEBUG (diagnostics utiles en prod).
+const DEBUG = false;
+function debug(...args){ if (DEBUG) console.log(...args); }
 
 function audioViaWorker(driveUrl){
   if(!driveUrl) return driveUrl;
@@ -264,16 +268,38 @@ const sheetUrl = "https://ville-sonore.gael-maignan.workers.dev/";
 
 let clips = [];
 
-async function loadClips(tag = "") {
+const CLIPS_CACHE_KEY = 'ville-sonore:clips-cache-v1';
+const CLIPS_CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+const CLIPS_FETCH_TIMEOUT_MS = 8000; // au-delà, on ne fait plus attendre l'utilisateur sur mobile
+
+function readClipsCache(){
   try {
-    console.log('fetching sheetUrl →', sheetUrl);
-    const res = await fetch(sheetUrl);
-    console.log('sheet fetch status:', res.status, res.statusText);
+    const raw = localStorage.getItem(CLIPS_CACHE_KEY);
+    if (!raw) return null;
+    const { ts, data } = JSON.parse(raw);
+    if (!ts || (Date.now() - ts) > CLIPS_CACHE_TTL_MS) return null;
+    return Array.isArray(data) ? data : null;
+  } catch(e){ return null; }
+}
+
+function writeClipsCache(data){
+  try {
+    localStorage.setItem(CLIPS_CACHE_KEY, JSON.stringify({ ts: Date.now(), data }));
+  } catch(e){ /* quota dépassé ou storage indisponible (navigation privée) : on ignore */ }
+}
+
+async function loadClips(tag = "") {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), CLIPS_FETCH_TIMEOUT_MS);
+  try {
+    debug('fetching sheetUrl →', sheetUrl);
+    const res = await fetch(sheetUrl, { signal: controller.signal });
+    debug('sheet fetch status:', res.status, res.statusText);
 
     if (!res.ok) {
       const body = await res.text().catch(()=>'<no body>');
       console.error('Erreur fetch sheet:', res.status, body.slice(0,800));
-      clips = [];
+      clips = readClipsCache() || [];
       return;
     }
 
@@ -377,11 +403,20 @@ async function loadClips(tag = "") {
       clips = clips.filter(c => c.categories.some(cat => cat.toLowerCase() === tag));
     }
 
-    console.log('Clips chargés:', clips.length);
+    debug('Clips chargés:', clips.length);
+    writeClipsCache(clips);
 
   } catch (err) {
-    console.error('Erreur loadClips:', err);
-    clips = [];
+    if (err.name === 'AbortError') {
+      console.warn(`Chargement des données interrompu après ${CLIPS_FETCH_TIMEOUT_MS}ms (réseau lent) — tentative de repli sur le cache local.`);
+    } else {
+      console.error('Erreur loadClips:', err);
+    }
+    // Réseau capricieux (fréquent sur mobile) : mieux vaut afficher des données un peu
+    // périmées que rien du tout.
+    clips = readClipsCache() || [];
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
@@ -480,8 +515,11 @@ document.querySelectorAll('.play-latest').forEach(btn => {
       try{
         // load Leaflet first
         await loadScript('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js');
-        // then markercluster (depends on L)
-        await loadScript('https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js');
+        // MarkerCluster ne sert (et n'est téléchargé) que si le clustering est activé :
+        // inutile de faire payer ce poids réseau supplémentaire aux mobiles quand enableClustering=false.
+        if (enableClustering) {
+          await loadScript('https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js');
+        }
         // short pause to ensure globals are set (usually unnecessary but safe)
         if(typeof L === 'undefined'){
           // give a tiny delay and re-check
@@ -514,6 +552,14 @@ function normalizedLink(url){
           subdomains: 'abcd',
           maxZoom: 19
         }).addTo(map);
+
+        // Sécurité mobile : le conteneur #map peut changer de taille juste après l'init
+        // (rotation d'écran, classes Tailwind CDN appliquées après coup, clavier virtuel qui
+        // redimensionne le viewport...). Leaflet ne redétecte pas ça tout seul.
+        requestAnimationFrame(() => map.invalidateSize());
+        setTimeout(() => map.invalidateSize(), 300);
+        window.addEventListener('resize', () => map.invalidateSize());
+        window.addEventListener('orientationchange', () => setTimeout(() => map.invalidateSize(), 250));
 
         // ✅ soit un cluster group, soit un simple layer group
         const markers = enableClustering ? L.markerClusterGroup() : L.layerGroup();
@@ -567,34 +613,43 @@ function getUniqueCategories(clips) {
     index++;
   }
 
-  console.log("ajout :", uniqueCategories);
+  debug("ajout :", uniqueCategories);
   return Array.from(uniqueCategories);
 }
 
 
 
+        const clipsListContainer = document.getElementById('clipsList');
+
+        // Délégation d'événements posée une seule fois : évite de ré-attacher des
+        // listeners à chaque recherche/re-render (coûteux et inutile sur mobile).
+        clipsListContainer.addEventListener('click', (e) => {
+          const playBtn = e.target.closest('.play');
+          if (playBtn) {
+            const idx = Number(playBtn.dataset.idx);
+            playClip(idx, playBtn); // idx = index dans le tableau clips global (cf. createClipCard)
+            return;
+          }
+          const locateBtn = e.target.closest('.locate');
+          if (locateBtn) {
+            const idx = Number(locateBtn.dataset.idx);
+            const c = clips[idx];
+            if (c) map.flyTo([c.lat, c.lon], 16);
+          }
+        });
+
         function addClipsToSidebar(list){
-          const container = document.getElementById('clipsList');
-          container.innerHTML='';
-          list.forEach((clip, idx)=> container.appendChild(createClipCard(clip, idx)));
-
-          // hook buttons
-          // hook buttons
-container.querySelectorAll('.play').forEach(btn=>{
-  btn.addEventListener('click', e=>{
-    const i = Number(btn.dataset.idx);
-    // on passe le bouton pour afficher le loader dessus
-    playClip(i, btn);
-  });
-});
-
-          container.querySelectorAll('.locate').forEach(btn=>{
-            const i = Number(btn.dataset.idx);
-            btn.addEventListener('click', ()=>{
-              const c = list[i];
-              if(c) map.flyTo([c.lat,c.lon],16);
-            })
-          })
+          clipsListContainer.innerHTML = '';
+          // DocumentFragment : un seul reflow pour insérer toute la liste, au lieu d'un par carte.
+          const frag = document.createDocumentFragment();
+          list.forEach((clip) => {
+            // Important : `list` peut être une sélection filtrée (recherche). L'index à stocker
+            // doit rester celui du tableau `clips` global, sinon "Écouter"/"Voir sur la carte"
+            // pointe sur le mauvais clip dès qu'un filtre est actif.
+            const globalIdx = clips.indexOf(clip);
+            frag.appendChild(createClipCard(clip, globalIdx));
+          });
+          clipsListContainer.appendChild(frag);
         }
 
         clips.reverse();
@@ -610,20 +665,20 @@ container.querySelectorAll('.play').forEach(btn=>{
     const detailedIcon = new L.DivIcon({
       className: 'custom-svg-icon',
       html: `
-        <svg xmlns="https://www.w3.org/2000/svg" width="24" height="34" viewBox="0 0 36 50">
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="50" viewBox="0 0 36 50" style="display:block">
           <path d="M18 0C8.06 0 0 8.06 0 18c0 12.03 18 32 18 32s18-19.97 18-32C36 8.06 27.94 0 18 0z" fill="#762B84"/>
           <circle cx="18" cy="18" r="7" fill="white"/>
         </svg>
       `,
       iconSize: [36, 50],
-      iconAnchor: [18, 50],
+      iconAnchor: [18, 50], // pointe du pin (bas, centré horizontalement) — correspond au path ci-dessus
       popupAnchor: [0, -50]
     });
 
     // icône cercle violet (zoom éloigné)
     const simpleIcon = new L.DivIcon({
       className: 'custom-circle-icon',
-      html: `<svg width="24" height="24" viewBox="0 0 100 100" xmlns="https://www.w3.org/2000/svg">
+      html: `<svg width="16" height="16" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="display:block">
   <defs>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="black" flood-opacity="0.3"/>
@@ -633,7 +688,7 @@ container.querySelectorAll('.play').forEach(btn=>{
 </svg>
 `,
       iconSize: [16, 16],
-      iconAnchor: [8, 8]
+      iconAnchor: [8, 8] // centre exact du cercle, désormais cohérent avec la taille réelle du SVG
     });
 
     // stocker tous les marqueurs
@@ -655,7 +710,12 @@ container.querySelectorAll('.play').forEach(btn=>{
       m.on('popupopen', (e) => {
   try {
     const btn = e.popup._contentNode?.querySelector('.popup-play');
-    if (btn) btn.addEventListener('click', () => playClip(idx, btn));
+    // le contenu du popup est conservé entre deux ouvertures : sans cette garde,
+    // on empilerait un listener supplémentaire à chaque clic sur le marqueur.
+    if (btn && !btn.dataset.bound) {
+      btn.dataset.bound = '1';
+      btn.addEventListener('click', () => playClip(idx, btn));
+    }
   } catch(err) {
     console.warn('Impossible d’attacher l’événement popup-play', err);
   }
@@ -673,11 +733,13 @@ container.querySelectorAll('.play').forEach(btn=>{
 
     // ✅ changement d'icône selon le zoom
     const ZOOM_THRESHOLD = 10; // seuil de zoom à partir duquel on met l’icône détaillée
+    let currentIconMode = null; // 'simple' | 'detailed' — évite de retraiter tous les marqueurs pour rien
     function updateIcons() {
-      const currentZoom = map.getZoom();
-      allMarkers.forEach(m => {
-        m.setIcon(currentZoom < ZOOM_THRESHOLD ? simpleIcon : detailedIcon);
-      });
+      const mode = map.getZoom() < ZOOM_THRESHOLD ? 'simple' : 'detailed';
+      if (mode === currentIconMode) return; // le mode n'a pas changé : rien à refaire
+      currentIconMode = mode;
+      const icon = mode === 'simple' ? simpleIcon : detailedIcon;
+      allMarkers.forEach(m => m.setIcon(icon));
     }
 
     // appel initial + écoute des changements
@@ -745,9 +807,14 @@ function playClip(idx, btn = null){
           return clips.filter(c=> (c.titre||'').toLowerCase().includes(q) || (c.description||'').toLowerCase().includes(q) || (c.date||'').toLowerCase().includes(q));
         }
 
+        let searchDebounceTimer = null;
         search.addEventListener('input', ()=>{
-          const filtered = filterClips(search.value);
-          addClipsToSidebar(filtered);
+          clearTimeout(searchDebounceTimer);
+          // 150ms : assez court pour rester réactif, assez long pour éviter un re-render
+          // complet de la sidebar à chaque caractère tapé (sensible sur mobile bas/moyen de gamme).
+          searchDebounceTimer = setTimeout(() => {
+            addClipsToSidebar(filterClips(search.value));
+          }, 150);
         });
 
         // initially populate sidebar
@@ -780,8 +847,3 @@ function playClip(idx, btn = null){
       }
     }
 }
-
-
-
-
-
